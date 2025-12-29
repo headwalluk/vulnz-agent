@@ -32,6 +32,9 @@ jobs:
             --exclude='.gitignore' \
             --exclude='.projectile' \
             --exclude='dev-notes' \
+            --exclude='release' \
+            --exclude='README.md' \
+            --exclude='CHANGELOG.md' \
             --exclude='*.bak' \
             --exclude='.DS_Store' \
             ./ release/vulnz-agent/
