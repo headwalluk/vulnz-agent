@@ -143,7 +143,7 @@ class Plugin {
 			array(
 				'type'              => 'string',
 				'sanitize_callback' => 'esc_url_raw',
-				'default'           => 'https://vulnz.headwall.net/api',
+				'default'           => 'https://api.vulnz.net/api',
 			)
 		);
 

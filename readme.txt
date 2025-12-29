@@ -14,6 +14,9 @@ WordPress plugin companion for the Vulnz vulnerability management platform.
 
 Vulnz Agent is a companion WordPress plugin for the [Vulnz](https://vulnz.net) SaaS platform. It automatically syncs your WordPress site's plugin inventory to the Vulnz API for vulnerability tracking and security monitoring.
 
+**Website:** [https://vulnz.net](https://vulnz.net)  
+**Self-Hosted Option:** Technical users can host their own Vulnz instance - see [github.com/headwalluk/vulnz](https://github.com/headwalluk/vulnz)
+
 **Key Features:**
 
 * Automated hourly sync of installed plugins to Vulnz API
@@ -28,7 +31,7 @@ The plugin registers a background task that runs hourly, sending your site's plu
 
 **External Service:**
 
-This plugin communicates with the Vulnz API at `https://vulnz.headwall.net/api` (migrating to `https://api.vulnz.net` soon). You will need a Vulnz account and API key to use this plugin. Learn more at [https://vulnz.net](https://vulnz.net).
+This plugin communicates with the Vulnz API at `https://api.vulnz.net/api`. You will need a Vulnz account and API key to use this plugin. Learn more at [https://vulnz.net](https://vulnz.net).
 
 **Data Transmitted:**
 
@@ -46,7 +49,7 @@ No personal data, user information, or site content is transmitted.
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to Vulnz Agent → Settings
 4. Enable the connection
-5. Enter your API URL (default: `https://vulnz.headwall.net/api`)
+5. Enter your API URL (default: `https://api.vulnz.net/api`)
 6. Enter your API Key from your Vulnz account
 7. Click "Sync Now" to test the connection
 
@@ -62,7 +65,7 @@ Yes. You need to sign up at [https://vulnz.net](https://vulnz.net) and generate 
 
 = Does this plugin require an external service? =
 
-Yes. The plugin sends data to the Vulnz API at `https://vulnz.headwall.net/api` (soon migrating to `https://api.vulnz.net`). This is required for vulnerability checking.
+Yes. The plugin sends data to the Vulnz API at `https://api.vulnz.net/api`. This is required for vulnerability checking.
 
 = What data does the plugin send? =
 

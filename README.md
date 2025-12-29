@@ -7,7 +7,8 @@ A WordPress plugin that integrates with the [Vulnz](https://vulnz.net) vulnerabi
 Vulnz Agent is a companion WordPress plugin for the Vulnz SaaS platform. It syncs your WordPress site's plugin inventory to the Vulnz API, enabling vulnerability tracking and security monitoring for your WordPress installations.
 
 **SaaS Platform:** [https://vulnz.net](https://vulnz.net)  
-**API Endpoint:** `https://vulnz.headwall.net/api` (migrating to `https://api.vulnz.net` soon)
+**API Endpoint:** `https://api.vulnz.net/api`  
+**Self-Hosted Option:** Technical users can host their own instance using [github.com/headwalluk/vulnz](https://github.com/headwalluk/vulnz)
 
 ## Features
 
@@ -37,7 +38,7 @@ Vulnz Agent is a companion WordPress plugin for the Vulnz SaaS platform. It sync
 
 3. Configure settings at **Vulnz Agent → Settings**:
    - Enable the connection
-   - Set API URL (default: `https://vulnz.headwall.net/api`)
+   - Set API URL (default: `https://api.vulnz.net/api`)
    - Add your API Key
 
 ### As a Must-Use Plugin
@@ -63,7 +64,7 @@ For hosting providers or managed WordPress installations:
 3. Configure via WordPress Admin as above, or pre-configure with constants:
    ```php
    // In wp-config.php
-   define('VULNZ_AGENT_API_URL', 'https://vulnz.headwall.net/api');
+   define('VULNZ_AGENT_API_URL', 'https://api.vulnz.net/api');
    define('VULNZ_AGENT_API_KEY', 'your-api-key-here');
    define('VULNZ_AGENT_ENABLED', true);
    ```

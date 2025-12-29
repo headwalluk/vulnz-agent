@@ -13,7 +13,7 @@ printf( '<h1>%s</h1>', esc_html( get_admin_page_title() ) );
 
 printf( '<p>%s</p>', esc_html__( 'You can get your API key by logging in to your Vulnz account and generating a new key in the dashboard.', 'vulnz-agent' ) );
 
-printf( '<p>Default API URL: %s</p>', esc_url( 'https://vulnz.headwall.net/api' ) );
+printf( '<p>Default API URL: %s</p>', esc_url( 'https://api.vulnz.net/api' ) );
 
 printf( '<form action="%s" method="post">', esc_url( admin_url( 'options.php' ) ) );
 \settings_fields( Vulnz_Agent\SETTINGS_GROUP );
