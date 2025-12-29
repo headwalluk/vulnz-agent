@@ -4,7 +4,7 @@ Tags: security, vulnerabilities, api, monitoring, vulnz
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.3
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -101,6 +101,18 @@ Yes. Each site needs the plugin installed and configured with its own settings. 
 
 == Changelog ==
 
+= 2.1.0 (2025-12-29) =
+* Added: wp-config.php constant support (VULNZ_AGENT_ENABLED, VULNZ_AGENT_API_URL, VULNZ_AGENT_API_KEY)
+* Added: Settings page shows notice and disables fields when constants are defined
+* Added: uninstall.php for proper cleanup when plugin is deleted
+* Added: Admin UI configuration constants (input size, menu position, icon, page hook)
+* Security: API key masking in settings form (shows bullets instead of plain text)
+* Security: Enhanced capability checks in admin templates (defense-in-depth)
+* Security: Production-safe error logging (only when WP_DEBUG enabled)
+* Security: Sanitized error messages to prevent information leakage
+* Changed: API endpoint migrated to api.vulnz.net
+* Changed: Error log messages use clean [Vulnz Agent] prefix
+
 = 2.0.0 (2025-12-29) =
 **Major Update - Breaking Changes**
 
@@ -110,12 +122,18 @@ Yes. Each site needs the plugin installed and configured with its own settings. 
 * **BREAKING:** Updated admin menu slugs: `wp-vulnz-*` → `vulnz-agent-*`
 * **BREAKING:** Changed text domain from `wp-vulnz` to `vulnz-agent`
 * **BREAKING:** Updated hook names and AJAX actions to use `vulnz_agent` prefix
+* **BREAKING:** Raised minimum PHP version to 8.3 (8.0 supported, 8.4 preferred)
 * Added: Plugin list sorting (configurable by title or slug)
 * Added: Multi-level sort (vulnerabilities first, then alphabetically)
+* Added: wp-config.php constant support (VULNZ_AGENT_ENABLED, VULNZ_AGENT_API_URL, VULNZ_AGENT_API_KEY)
+* Added: Settings page shows when constants are defined and disables those fields
+* Security: API key masking in settings form
+* Security: Capability checks in admin templates (defense-in-depth)
+* Security: Production-safe error logging (only when WP_DEBUG enabled)
 * Improved: Code organization with constants for all option names
 * Improved: Removed magic strings throughout codebase
-* Changed: Minimum PHP version raised to 8.3 (8.0 supported, 8.4 preferred)
 * Changed: Updated Plugin URI to GitHub repository
+* Changed: API endpoint migrated to api.vulnz.net
 * Note: Database option names unchanged for backward compatibility
 
 = 1.0.2 (Previous) =

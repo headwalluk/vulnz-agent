@@ -5,6 +5,37 @@ All notable changes to Vulnz Agent will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-12-29
+
+### Added
+
+- **wp-config.php constant support** for must-use plugin deployments:
+  - `VULNZ_AGENT_ENABLED` - Enable/disable the plugin
+  - `VULNZ_AGENT_API_URL` - Override API endpoint URL
+  - `VULNZ_AGENT_API_KEY` - Set API authentication key
+- Settings page shows informational notice when constants are defined
+- Form fields automatically disabled when values are set via wp-config.php constants
+- `uninstall.php` for proper cleanup when plugin is deleted
+- Constants for admin UI configuration:
+  - `ADMIN_INPUT_FIELD_SIZE` - Input field size (50)
+  - `ADMIN_MENU_POSITION` - WordPress menu position (80)
+  - `ADMIN_MENU_ICON` - Menu icon name (dashicons-shield-alt)
+  - `ADMIN_PAGE_HOOK_SUMMARY` - Admin page hook identifier
+
+### Security
+
+- API key masking in settings form - displays bullets instead of plain text
+- API key only updates when new value is entered (preserves existing when masked)
+- Capability checks added to admin view templates for defense-in-depth
+- Production-safe error logging - only logs when `WP_DEBUG` is enabled
+- Sanitized error messages to prevent information leakage in production
+- Enhanced SSRF protection in API client (already blocked localhost/private IPs, requires HTTPS)
+
+### Changed
+
+- API endpoint migrated from `vulnz.headwall.net` to `api.vulnz.net`
+- Error log messages use clean `[Vulnz Agent]` prefix instead of function names
+
 ## [2.0.0] - 2025-12-29
 
 ### Breaking Changes
@@ -35,9 +66,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `PLUGIN_SORT_ORDER` constant for choosing 'title' or 'slug' sorting
 - Multi-level sorting: vulnerable plugins first, then alphabetically
 - Constants for all WordPress option names (eliminates magic strings)
+- Constants for admin UI configuration (input size, menu position, icon)
 - GitHub README.md for developer documentation
 - Comprehensive CHANGELOG.md
 - Must-use plugin installation instructions
+- **wp-config.php constant support** for mu-plugins deployments:
+  - `VULNZ_AGENT_ENABLED` - Enable/disable the plugin
+  - `VULNZ_AGENT_API_URL` - Override API endpoint
+  - `VULNZ_AGENT_API_KEY` - Set API key
+- Settings page shows notice when constants are defined
+- Form fields automatically disabled when set via constants
+
+### Security
+
+- Added capability checks to admin view templates (defense-in-depth)
+- API key masking in settings form (displays bullets instead of plain text)
+- API key only updates when new value is entered (not when masked)
+- Production-safe error logging (only logs when WP_DEBUG enabled)
+- Sanitized error messages to prevent information leakage
+- SSRF protection in API client (blocks localhost, private IPs, requires HTTPS)
 
 ### Changed
 

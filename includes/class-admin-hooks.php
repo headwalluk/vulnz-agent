@@ -23,7 +23,7 @@ class Admin_Hooks {
 	 * @param string $hook The current admin page hook.
 	 */
 	public function enqueue_assets( $hook ) {
-		if ( 'toplevel_page_vulnz-agent-summary' !== $hook ) {
+		if ( ADMIN_PAGE_HOOK_SUMMARY !== $hook ) {
 			return;
 		}
 
@@ -58,7 +58,7 @@ class Admin_Hooks {
 	 * Display an admin notice if the plugin is not enabled.
 	 */
 	public function admin_notice() {
-		if ( ! \get_option( IS_VULNZ_ENABLED ) ) {
+		if ( ! get_option_or_constant( IS_VULNZ_ENABLED, 'VULNZ_AGENT_ENABLED', false ) ) {
 			printf(
 				'<div class="notice notice-warning"><p>%s <a href="%s">%s</a></p></div>',
 				esc_html__( 'Vulnz Agent API is not enabled. ', 'vulnz-agent' ),

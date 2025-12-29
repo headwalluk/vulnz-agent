@@ -105,8 +105,8 @@ class Plugin {
 			'manage_options',
 			'vulnz-agent-summary',
 			array( $admin_hooks, 'render_summary_page' ),
-			'dashicons-shield-alt',
-			80
+			ADMIN_MENU_ICON,
+			ADMIN_MENU_POSITION
 		);
 
 		\add_submenu_page( 'vulnz-agent-summary', \__( 'Summary', 'vulnz-agent' ), \__( 'Summary', 'vulnz-agent' ), 'manage_options', 'vulnz-agent-summary', array( $admin_hooks, 'render_summary_page' ) );
@@ -143,7 +143,7 @@ class Plugin {
 			array(
 				'type'              => 'string',
 				'sanitize_callback' => 'esc_url_raw',
-				'default'           => 'https://api.vulnz.net/api',
+				'default'           => DEFAULT_VULNZ_API_URL,
 			)
 		);
 
@@ -152,7 +152,7 @@ class Plugin {
 			VULNZ_API_KEY,
 			array(
 				'type'              => 'string',
-				'sanitize_callback' => '\\Vulnz_Agent\\sanitize_api_key',
+				'sanitize_callback' => '\\Vulnz_Agent\\sanitize_api_key_field',
 			)
 		);
 	}
@@ -161,7 +161,7 @@ class Plugin {
 	 * Run hourly scheduled task(s).
 	 */
 	public function run_hourly_task(): void {
-		$enabled = (bool) \get_option( IS_VULNZ_ENABLED, false );
+		$enabled = (bool) get_option_or_constant( IS_VULNZ_ENABLED, 'VULNZ_AGENT_ENABLED', false );
 
 		if ( $enabled ) {
 			$this->sync_website_with_vulnz();

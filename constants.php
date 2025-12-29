@@ -32,5 +32,14 @@ const WEBSITE_DATA_CACHE_TTL = \MINUTE_IN_SECONDS;
 
 const API_REQUEST_TIMEOUT = 10;
 
+// Default API endpoint URL.
+const DEFAULT_VULNZ_API_URL = 'https://api.vulnz.net/api';
+
 // Plugin list sort order: 'title' or 'slug'.
 const PLUGIN_SORT_ORDER = 'title';
+
+// Admin UI configuration.
+const ADMIN_INPUT_FIELD_SIZE = 50;
+const ADMIN_MENU_POSITION = 80;
+const ADMIN_MENU_ICON = 'dashicons-shield-alt';
+const ADMIN_PAGE_HOOK_SUMMARY = 'toplevel_page_vulnz-agent-summary';

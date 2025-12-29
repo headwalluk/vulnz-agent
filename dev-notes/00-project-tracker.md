@@ -99,7 +99,7 @@
 - [x] Test "Sync Now" functionality
 - [x] Verify settings are saved correctly
 - [x] Check that cron job is registered correctly
-- [ ] Verify Settings link appears on plugins page
+- [x] Verify Settings link appears on plugins page
 
 ### 3.3 Database Migration (if upgrading existing installs)
 - [ ] Create migration function to copy old option values to new keys
@@ -112,12 +112,16 @@
 
 - [x] Remove any old commented code
 - [x] Verify all file references use correct paths
-- [x] Update version number to 2.0.0
+- [x] Update version number to 2.1.0
 - [x] Review and test all changes
 - [x] Create README.md for GitHub
 - [x] Create CHANGELOG.md
-- [ ] Commit changes to git repository
-- [ ] Tag release if appropriate
+- [x] Add uninstall.php for cleanup
+- [x] Implement wp-config.php constant support
+- [x] Security hardening (API key masking, capability checks, safe logging)
+- [x] Extract all magic strings/numbers to constants
+- [x] Commit changes to git repository
+- [x] Tag release if appropriate
 
 ---
 
@@ -131,19 +135,24 @@
 
 ---
 
-**Status:** Complete - Ready for Git Commit & Release  
+**Status:** Complete - Version 2.1.0 Released  
 **Last Updated:** 2025-12-29
 
 ## Summary
 
-✅ **Version 2.0.0 Complete**
+✅ **Version 2.1.0 Complete**
 - All code rebranded from wp-vulnz to vulnz-agent
 - Comprehensive documentation created (README.md, readme.txt, CHANGELOG.md)
+- wp-config.php constant support for mu-plugins deployments
+- Security hardening (API key masking, capability checks, safe error logging)
+- All magic strings/numbers extracted to constants
+- uninstall.php for proper cleanup
 - Breaking changes documented
 - Backward compatibility maintained for database options
 - Plugin tested and working
+- GitHub Actions workflow for automated releases
 
-**Next Steps:**
-1. Commit changes to git repository
-2. Tag release as v2.0.0
-3. Deploy to production
+**Completed:**
+1. ✅ Committed changes to git repository
+2. ✅ Tagged release as v2.1.0
+3. ✅ Ready for production deployment

@@ -3,7 +3,7 @@
  * Plugin Name:       Vulnz Agent
  * Plugin URI:        https://github.com/headwalluk/vulnz-agent
  * Description:       A companion WordPress plugin for the Vulnz project that syncs site data with the Vulnz API.
- * Version:           2.0.0
+ * Version:           2.1.0
  * Author:            Paul Faulkner
  * Author URI:        https://headwall-hosting.com/
  * License:           GPL v2 or later
@@ -18,7 +18,7 @@
 defined( 'ABSPATH' ) || die();
 
 // Define the plugin version here for easy bumping during releases.
-define( 'Vulnz_Agent\PLUGIN_VERSION', '2.0.0' );
+define( 'Vulnz_Agent\PLUGIN_VERSION', '2.1.0' );
 define( 'Vulnz_Agent\PLUGIN_FILE', __FILE__ );
 
 require_once plugin_dir_path( __FILE__ ) . 'constants.php';

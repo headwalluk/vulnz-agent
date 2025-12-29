@@ -8,6 +8,11 @@
 // Block direct access.
 defined( 'ABSPATH' ) || die();
 
+// Verify user has permission to access this page.
+if ( ! current_user_can( 'manage_options' ) ) {
+	wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'vulnz-agent' ) );
+}
+
 $api_client = Vulnz_Agent\get_plugin()->get_api_client();
 $site_url   = \site_url();
 $our_domain = \wp_parse_url( $site_url, PHP_URL_HOST );
