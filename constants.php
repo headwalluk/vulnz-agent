@@ -32,11 +32,14 @@ const WEBSITE_DATA_CACHE_TTL = \MINUTE_IN_SECONDS;
 
 const API_REQUEST_TIMEOUT = 10;
 
-// Default API endpoint URL.
-const DEFAULT_VULNZ_API_URL = 'https://api.vulnz.net/api';
+// Default API endpoint URL (base URL without /api path).
+const DEFAULT_VULNZ_API_URL = 'https://api.vulnz.net';
 
 // Plugin list sort order: 'title' or 'slug'.
 const PLUGIN_SORT_ORDER = 'title';
+
+// Dummy value for API key field to prevent leaking actual key in HTML.
+const DUMMY_API_KEY = 'API KEY HIDDEN FOR PRIVACY';
 
 // Admin UI configuration.
 const ADMIN_INPUT_FIELD_SIZE = 50;

@@ -18,7 +18,11 @@ printf( '<h1>%s</h1>', esc_html( get_admin_page_title() ) );
 
 printf( '<p>%s</p>', esc_html__( 'You can get your API key by logging in to your Vulnz account and generating a new key in the dashboard.', 'vulnz-agent' ) );
 
-printf( '<p>Default API URL: %s</p>', esc_url( Vulnz_Agent\DEFAULT_VULNZ_API_URL ) );
+printf(
+	'<p>%s <code>%s</code></p>',
+	esc_html__( 'Default API URL (base URL without /api path):', 'vulnz-agent' ),
+	esc_html( Vulnz_Agent\DEFAULT_VULNZ_API_URL )
+);
 
 // Check if settings are defined via constants.
 $has_constant_config = defined( 'VULNZ_AGENT_ENABLED' ) || defined( 'VULNZ_AGENT_API_URL' ) || defined( 'VULNZ_AGENT_API_KEY' );
@@ -40,7 +44,8 @@ echo '<table class="form-table">';
 echo '<tr valign="top">';
 printf( '<th scope="row">%s</th>', esc_html__( 'Enable Connection to Vulnz', 'vulnz-agent' ) );
 $is_enabled_via_constant = defined( 'VULNZ_AGENT_ENABLED' );
-$enabled_value = Vulnz_Agent\get_option_or_constant( Vulnz_Agent\IS_VULNZ_ENABLED, 'VULNZ_AGENT_ENABLED', false );
+// Use constant value if defined, otherwise get from database
+$enabled_value = $is_enabled_via_constant ? constant( 'VULNZ_AGENT_ENABLED' ) : get_option( Vulnz_Agent\IS_VULNZ_ENABLED, false );
 printf(
 	'<td><input type="checkbox" name="%s" value="1" %s %s />%s</td>',
 	esc_attr( Vulnz_Agent\IS_VULNZ_ENABLED ),
@@ -53,7 +58,8 @@ echo '</tr>';
 echo '<tr valign="top">';
 printf( '<th scope="row">%s</th>', esc_html__( 'API URL', 'vulnz-agent' ) );
 $is_url_via_constant = defined( 'VULNZ_AGENT_API_URL' );
-$url_value = Vulnz_Agent\get_option_or_constant( Vulnz_Agent\VULNZ_API_URL, 'VULNZ_AGENT_API_URL', '' );
+// Use get_option directly for display, or use the default if empty
+$url_value = $is_url_via_constant ? constant( 'VULNZ_AGENT_API_URL' ) : get_option( Vulnz_Agent\VULNZ_API_URL, Vulnz_Agent\DEFAULT_VULNZ_API_URL );
 printf(
 	'<td><input type="text" name="%s" value="%s" size="%d" %s />%s</td>',
 	esc_attr( Vulnz_Agent\VULNZ_API_URL ),
@@ -71,14 +77,14 @@ if ( $is_key_via_constant ) {
 	// Show that key is set via constant.
 	printf(
 		'<td><input type="password" value="%s" size="%d" disabled /> <em>%s</em></td>',
-		esc_attr( str_repeat( '•', 32 ) ),
+		esc_attr( Vulnz_Agent\DUMMY_API_KEY ),
 		Vulnz_Agent\ADMIN_INPUT_FIELD_SIZE,
 		esc_html__( '(Set via wp-config.php)', 'vulnz-agent' )
 	);
 } else {
-	// Normal masking behavior for database options.
+	// Show dummy value if key exists, otherwise empty for new entry.
 	$existing_key = get_option( Vulnz_Agent\VULNZ_API_KEY );
-	$display_value = ! empty( $existing_key ) ? str_repeat( '•', 32 ) : '';
+	$display_value = ! empty( $existing_key ) ? Vulnz_Agent\DUMMY_API_KEY : '';
 	printf(
 		'<td><input type="password" name="%s" value="%s" size="%d" autocomplete="off" placeholder="%s" /></td>',
 		esc_attr( Vulnz_Agent\VULNZ_API_KEY ),

@@ -4,7 +4,7 @@ Tags: security, vulnerabilities, api, monitoring, vulnz
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.3
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,7 @@ The plugin registers a background task that runs hourly, sending your site's plu
 
 **External Service:**
 
-This plugin communicates with the Vulnz API at `https://api.vulnz.net/api`. You will need a Vulnz account and API key to use this plugin. Learn more at [https://vulnz.net](https://vulnz.net).
+This plugin communicates with the Vulnz API at `https://api.vulnz.net`. You will need a Vulnz account and API key to use this plugin. Learn more at [https://vulnz.net](https://vulnz.net).
 
 **Data Transmitted:**
 
@@ -49,7 +49,7 @@ No personal data, user information, or site content is transmitted.
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to Vulnz Agent → Settings
 4. Enable the connection
-5. Enter your API URL (default: `https://api.vulnz.net/api`)
+5. Enter your API URL (default: `https://api.vulnz.net` - base URL)
 6. Enter your API Key from your Vulnz account
 7. Click "Sync Now" to test the connection
 
@@ -65,7 +65,7 @@ Yes. You need to sign up at [https://vulnz.net](https://vulnz.net) and generate 
 
 = Does this plugin require an external service? =
 
-Yes. The plugin sends data to the Vulnz API at `https://api.vulnz.net/api`. This is required for vulnerability checking.
+Yes. The plugin sends data to the Vulnz API at `https://api.vulnz.net`. This is required for vulnerability checking.
 
 = What data does the plugin send? =
 
@@ -100,6 +100,17 @@ Yes. Each site needs the plugin installed and configured with its own settings. 
 2. Settings page for API configuration
 
 == Changelog ==
+
+= 2.1.1 (2025-12-29) =
+* Fixed: get_option_or_constant() now properly checks namespaced constants
+* Fixed: Settings page displays database values correctly
+* Fixed: API key field no longer erased when saving other settings
+* Fixed: API URL now uses base domain (https://api.vulnz.net) without /api path
+* Fixed: API client strips trailing slashes from URL
+* Changed: API key masking uses DUMMY_API_KEY constant instead of bullet points
+* Changed: Vulnerability links show clean hostname with external icon
+* Changed: Vulnerability display with numbered index and improved layout
+* Changed: "No known vulnerabilities" shown in green text
 
 = 2.1.0 (2025-12-29) =
 * Added: wp-config.php constant support (VULNZ_AGENT_ENABLED, VULNZ_AGENT_API_URL, VULNZ_AGENT_API_KEY)

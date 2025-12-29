@@ -45,13 +45,24 @@ if ( empty( $website_data ) ) {
 		printf( '<td>%s</td>', esc_html( $this_plugin['version'] ) );
 		echo '<td>';
 		if ( ! empty( $this_plugin['vulnerabilities'] ) ) {
-			echo '<ul>';
+			$index = 1;
 			foreach ( $this_plugin['vulnerabilities'] as $vulnerability ) {
-				printf( '<li><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></li>', esc_url( $vulnerability ), esc_html( $vulnerability ) );
+				// Extract hostname from URL.
+				$parsed_url = wp_parse_url( $vulnerability );
+				$hostname   = isset( $parsed_url['host'] ) ? $parsed_url['host'] : $vulnerability;
+				// Remove 'www.' prefix if present.
+				$hostname = preg_replace( '/^www\./', '', $hostname );
+
+				printf(
+					'<a href="%s" target="_blank" rel="noopener noreferrer" style="display: block; margin-bottom: 4px;"><span class="dashicons dashicons-external" style="font-size: 14px; width: 14px; height: 14px; vertical-align: middle;"></span> %d. %s</a>',
+					esc_url( $vulnerability ),
+					$index,
+					esc_html( $hostname )
+				);
+				$index++;
 			}
-			echo '</ul>';
 		} else {
-			printf( '<p>%s</p>', esc_html__( 'No known vulnerabilities', 'vulnz-agent' ) );
+			printf( '<span style="color: #2c7e2e;">%s</span>', esc_html__( 'No known vulnerabilities', 'vulnz-agent' ) );
 		}
 		echo '</td>';
 		echo '</tr>';

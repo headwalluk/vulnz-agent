@@ -33,7 +33,13 @@ function get_plugin(): Plugin {
  * @return mixed The option value, constant value, or default.
  */
 function get_option_or_constant( string $option_name, string $constant_name, $default = false ) {
-	// Check if constant is defined in wp-config.php.
+	// Check if constant is defined in the current namespace first.
+	$namespaced_constant = __NAMESPACE__ . '\\' . $constant_name;
+	if ( defined( $namespaced_constant ) ) {
+		return constant( $namespaced_constant );
+	}
+
+	// Check if constant is defined in global namespace (wp-config.php).
 	if ( defined( $constant_name ) ) {
 		return constant( $constant_name );
 	}
@@ -77,8 +83,8 @@ function sanitize_api_key( string $api_key ): string {
  * @return string The sanitized API key or existing key if input was masked.
  */
 function sanitize_api_key_field( string $api_key ): string {
-	// If the input is all bullet points (masked), keep existing key.
-	if ( preg_match( '/^•+$/', $api_key ) ) {
+	// If the input matches our dummy key, keep existing key (don't update).
+	if ( DUMMY_API_KEY === $api_key ) {
 		return get_option( VULNZ_API_KEY, '' );
 	}
 

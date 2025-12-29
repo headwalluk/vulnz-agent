@@ -35,6 +35,11 @@ class Api_Client {
 	public function __construct() {
 		$this->api_url = get_option_or_constant( VULNZ_API_URL, 'VULNZ_AGENT_API_URL', DEFAULT_VULNZ_API_URL );
 		$this->api_key = get_option_or_constant( VULNZ_API_KEY, 'VULNZ_AGENT_API_KEY', '' );
+
+		// Remove trailing slash from API URL if present.
+		if ( is_string( $this->api_url ) ) {
+			$this->api_url = rtrim( $this->api_url, '/' );
+		}
 	}
 
 	/**

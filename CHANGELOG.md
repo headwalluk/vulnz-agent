@@ -5,6 +5,24 @@ All notable changes to Vulnz Agent will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2025-12-29
+
+### Fixed
+
+- `get_option_or_constant()` now properly checks for namespaced constants first
+- Settings page now correctly displays database values instead of using `get_option_or_constant()`
+- API key field no longer wipes saved key when saving other settings
+- API URL now uses base domain (`https://api.vulnz.net`) instead of full path with `/api`
+- Constructor in `Api_Client` strips trailing slashes from API URL
+
+### Changed
+
+- Replaced bullet point masking with `DUMMY_API_KEY` constant for better security
+- API URL setting now expects base domain without `/api` path (documented in help text)
+- Vulnerability links on Summary page now show clean hostname with dashicons-external icon
+- Vulnerability display improved with numbered index and block layout
+- "No known vulnerabilities" text now displays in green for better visual scanning
+
 ## [2.1.0] - 2025-12-29
 
 ### Added
