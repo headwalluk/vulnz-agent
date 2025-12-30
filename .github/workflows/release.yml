@@ -4,10 +4,12 @@ on:
   push:
     tags:
       - 'v*'        # e.g. v2.1.2
-      - 'v*.*.*'    # explicit semver-like glob
-  release:
-    types: [published]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build (e.g. v2.1.2)'
+        required: true
+        default: ''
 
 permissions:
   contents: write
@@ -15,7 +17,6 @@ permissions:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'release' || startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,11 +25,13 @@ jobs:
 
       - name: Derive version and slug
         id: meta
-        env:
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
         shell: bash
         run: |
-          TAG="${RELEASE_TAG:-$GITHUB_REF_NAME}"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            TAG="${{ github.event.inputs.tag }}"
+          else
+            TAG="$GITHUB_REF_NAME"
+          fi
           echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
           echo "VERSION=${TAG#v}" >> "$GITHUB_OUTPUT"
           echo "SLUG=vulnz-agent" >> "$GITHUB_OUTPUT"
@@ -66,73 +69,5 @@ jobs:
           generate_release_notes: true
           make_latest: true
           fail_on_unmatched_files: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-name: Build Release
-
-on:
-  push:
-    tags:
-      - 'v*'
-
-permissions:
-  contents: write
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Get version from tag
-        id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-      
-      - name: Create release directory
-        run: |
-          mkdir -p release/vulnz-agent
-          
-      - name: Copy plugin files
-        run: |
-          rsync -av \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='.gitignore' \
-            --exclude='.projectile' \
-            --exclude='dev-notes' \
-            --exclude='release' \
-            --exclude='README.md' \
-            --exclude='CHANGELOG.md' \
-            --exclude='*.bak' \
-            --exclude='.DS_Store' \
-            ./ release/vulnz-agent/
-      
-      - name: Create zip file
-        run: |
-          cd release
-          zip -r ../vulnz-agent-${{ steps.get_version.outputs.VERSION }}.zip vulnz-agent/
-          cd ..
-      
-      - name: Generate release notes
-        id: release_notes
-        run: |
-          # Extract changelog for this version
-          VERSION=${{ steps.get_version.outputs.VERSION }}
-          awk "/## \[${VERSION}\]/,/## \[/" CHANGELOG.md | sed '1d;$d' > release_notes.txt
-          
-          # If no specific changelog found, use generic message
-          if [ ! -s release_notes.txt ]; then
-            echo "See [CHANGELOG.md](https://github.com/headwalluk/vulnz-agent/blob/main/CHANGELOG.md) for details." > release_notes.txt
-          fi
-      
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: vulnz-agent-${{ steps.get_version.outputs.VERSION }}.zip
-          body_path: release_notes.txt
-          draft: false
-          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
