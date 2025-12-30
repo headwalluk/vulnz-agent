@@ -9,6 +9,7 @@ Vulnz Agent is a companion WordPress plugin for the Vulnz SaaS platform. It sync
 **SaaS Platform:** [https://vulnz.net](https://vulnz.net)  
 **API Endpoint:** `https://api.vulnz.net/api`  
 **Self-Hosted Option:** Technical users can host their own instance using [github.com/headwalluk/vulnz](https://github.com/headwalluk/vulnz)
+**Latest Download:** https://github.com/headwalluk/vulnz-agent/releases/latest/download/vulnz-agent.zip
 
 ## Features
 

@@ -4,7 +4,7 @@ Tags: security, vulnerabilities, api, monitoring, vulnz
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.3
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,6 +100,10 @@ Yes. Each site needs the plugin installed and configured with its own settings. 
 2. Settings page for API configuration
 
 == Changelog ==
+
+= 2.1.2 (2025-12-30) =
+* Added: GitHub Actions release workflow publishes both a stable asset (`vulnz-agent.zip`) and a versioned asset for each release
+* Docs: README updated with a stable latest download URL
 
 = 2.1.1 (2025-12-29) =
 * Fixed: get_option_or_constant() now properly checks namespaced constants

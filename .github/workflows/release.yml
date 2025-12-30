@@ -1,3 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*' # e.g. v2.1.1
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Derive version and slug
+        id: meta
+        shell: bash
+        run: |
+          echo "TAG=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          echo "SLUG=vulnz-agent" >> "$GITHUB_OUTPUT"
+
+      - name: Build plugin zips (versioned and stable)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist package
+          SLUG="${{ steps.meta.outputs.SLUG }}"
+
+          # Create a folder-wrapped package so the zip root is the plugin slug
+          mkdir -p "package/$SLUG"
+          rsync -a \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'node_modules' \
+            --exclude 'package' \
+            --exclude 'dist' \
+            ./ "package/$SLUG/"
+
+          # Create versioned zip and stable zip
+          pushd package >/dev/null
+          zip -r "../dist/$SLUG-${{ steps.meta.outputs.VERSION }}.zip" "$SLUG"
+          cp "../dist/$SLUG-${{ steps.meta.outputs.VERSION }}.zip" "../dist/$SLUG.zip"
+          popd >/dev/null
+
+      - name: Publish GitHub Release with assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/${{ steps.meta.outputs.SLUG }}-${{ steps.meta.outputs.VERSION }}.zip
+            dist/${{ steps.meta.outputs.SLUG }}.zip
+          generate_release_notes: true
+          make_latest: true
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 name: Build Release
 
 on:
