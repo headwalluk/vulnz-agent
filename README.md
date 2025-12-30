@@ -1,5 +1,12 @@
 # Vulnz Agent
 
+[![Release](https://img.shields.io/github/v/release/headwalluk/vulnz-agent?label=release)](https://github.com/headwalluk/vulnz-agent/releases)
+[![Download latest](https://img.shields.io/badge/download-latest%20zip-brightgreen?logo=github)](https://github.com/headwalluk/vulnz-agent/releases/latest/download/vulnz-agent.zip)
+[![CI - Release](https://github.com/headwalluk/vulnz-agent/actions/workflows/release.yml/badge.svg)](https://github.com/headwalluk/vulnz-agent/actions/workflows/release.yml)
+[![License](https://img.shields.io/badge/license-GPLv2%2B-blue)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![PHP](https://img.shields.io/badge/PHP-8.3%2B-777bb3?logo=php)](https://www.php.net/)
+[![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-21759b?logo=wordpress)](https://wordpress.org/)
+
 A WordPress plugin that integrates with the [Vulnz](https://vulnz.net) vulnerability management platform.
 
 ## Overview
