@@ -2,8 +2,12 @@ name: Release
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'        # e.g. v2.1.2
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       tag:
@@ -26,8 +30,11 @@ jobs:
       - name: Derive version and slug
         id: meta
         shell: bash
+        if: ${{ startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch' || github.event_name == 'release' }}
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            TAG="${{ github.event.release.tag_name }}"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             TAG="${{ github.event.inputs.tag }}"
           else
             TAG="$GITHUB_REF_NAME"
@@ -38,6 +45,7 @@ jobs:
 
       - name: Build plugin zips (versioned and stable)
         shell: bash
+        if: ${{ startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch' || github.event_name == 'release' }}
         run: |
           set -euo pipefail
           mkdir -p dist package
@@ -61,6 +69,7 @@ jobs:
 
       - name: Publish GitHub Release with assets
         uses: softprops/action-gh-release@v2
+        if: ${{ startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch' || github.event_name == 'release' }}
         with:
           tag_name: ${{ steps.meta.outputs.TAG }}
           files: |
