@@ -1,8 +1,6 @@
 /**
  * Admin JavaScript for Vulnz Agent plugin.
  */
-console.log('Vulnz Agent Admin JS Loaded');
-
 jQuery(document).ready(function ($) {
   $('#vulnz-agent-sync-now').on('click', function (e) {
     e.preventDefault();

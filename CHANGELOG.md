@@ -5,6 +5,36 @@ All notable changes to Vulnz Agent will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-01-07
+
+### Added
+
+- WordPress Coding Standards configuration via `phpcs.xml`
+- `declare(strict_types=1)` to all PHP files for enhanced type safety
+- `@since` tags to all function and method docblocks
+- Plugin header fields: `Requires at least: 6.0` and `Requires PHP: 8.0`
+- Proper `type="button"` attribute on Sync Now button
+- PHPCS disable comments for proper nonce verification handling
+
+### Changed
+
+- Improved boolean option handling using `filter_var(FILTER_VALIDATE_BOOLEAN)` for robust type checking
+- Property ordering in classes follows guidelines (properties declared inline with proper types)
+- API Client properties now use typed properties (`string $api_url`, `string $api_key`)
+- Return type added to `ajax_sync_now()` method (`: void`)
+- Enhanced type hints across all methods and functions
+
+### Fixed
+
+- Removed debug `console.log` from admin JavaScript
+- Corrected minimum PHP version from 8.3 to 8.0 in readme.txt
+
+### Code Quality
+
+- All code now follows WordPress Plugin Development Guidelines
+- Consistent docblock formatting throughout codebase
+- Better type safety with strict types and nullable type hints
+
 ## [2.1.2] - 2025-12-30
 
 ### Added

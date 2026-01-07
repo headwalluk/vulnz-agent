@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ruleset name="Vulnz Agent WordPress Standards">
+	<description>WordPress Coding Standards for Vulnz Agent Plugin</description>
+	
+	<file>.</file>
+	
+	<!-- Exclude patterns -->
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/assets/*</exclude-pattern>
+	<exclude-pattern>*/.github/*</exclude-pattern>
+	
+	<!-- Arguments -->
+	<arg value="sp"/>
+	<arg name="basepath" value="."/>
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
+	<arg name="parallel" value="8"/>
+	
+	<!-- Rules -->
+	<rule ref="WordPress">
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+	</rule>
+	
+	<!-- Prefixes -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="vulnz_agent"/>
+				<element value="Vulnz_Agent"/>
+			</property>
+		</properties>
+	</rule>
+	
+	<!-- Minimum PHP version -->
+	<config name="minimum_wp_version" value="6.0"/>
+	<config name="testVersion" value="8.0-"/>
+</ruleset>

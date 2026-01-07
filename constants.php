@@ -5,6 +5,8 @@
  * @package Vulnz_Agent
  */
 
+declare(strict_types=1);
+
 namespace Vulnz_Agent;
 
 // Block direct access.

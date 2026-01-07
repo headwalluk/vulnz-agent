@@ -5,6 +5,8 @@
  * @package Vulnz_Agent
  */
 
+declare(strict_types=1);
+
 namespace Vulnz_Agent;
 
 // Block direct access.
@@ -12,6 +14,8 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * The main plugin class.
+ *
+ * @since 1.0.0
  */
 class Plugin {
 
@@ -21,7 +25,23 @@ class Plugin {
 	private const CRON_HOOK = 'vulnz_agent_hourly_event';
 
 	/**
-	 * Initialse the plugin and set up hooks.
+	 * Admin_Hooks instance.
+	 *
+	 * @var Admin_Hooks|null
+	 */
+	private ?Admin_Hooks $admin_hooks = null;
+
+	/**
+	 * Api_Client instance.
+	 *
+	 * @var Api_Client|null
+	 */
+	private ?Api_Client $api_client = null;
+
+	/**
+	 * Initialize the plugin and set up hooks.
+	 *
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		\add_action( 'init', array( $this, 'init' ) );
@@ -32,6 +52,8 @@ class Plugin {
 
 	/**
 	 * Initialize the plugin.
+	 *
+	 * @since 1.0.0
 	 */
 	public function init() {
 		// Register cron callback for our hourly task.
@@ -42,6 +64,8 @@ class Plugin {
 
 	/**
 	 * Initialize the admin area.
+	 *
+	 * @since 1.0.0
 	 */
 	public function admin_init() {
 		$this->register_settings();
@@ -55,14 +79,9 @@ class Plugin {
 	}
 
 	/**
-	 * Admin_Hooks instance.
-	 *
-	 * @var Admin_Hooks
-	 */
-	private $admin_hooks;
-
-	/**
 	 * Get the Admin_Hooks instance.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return Admin_Hooks The Admin_Hooks instance.
 	 */
@@ -75,14 +94,9 @@ class Plugin {
 	}
 
 	/**
-	 * Api_Client instance.
-	 *
-	 * @var Api_Client
-	 */
-	private $api_client;
-
-	/**
 	 * Get the API instance.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return Api_Client The Api_Client instance.
 	 */
@@ -95,6 +109,8 @@ class Plugin {
 
 	/**
 	 * Add the plugin settings page to the admin menu.
+	 *
+	 * @since 1.0.0
 	 */
 	public function admin_menu() {
 		$admin_hooks = $this->get_admin_hooks();
@@ -125,7 +141,9 @@ class Plugin {
 	}
 
 	/**
-	 * Render the plugin settings page.
+	 * Register the plugin settings.
+	 *
+	 * @since 1.0.0
 	 */
 	public function register_settings() {
 		\register_setting(
@@ -159,9 +177,11 @@ class Plugin {
 
 	/**
 	 * Run hourly scheduled task(s).
+	 *
+	 * @since 1.0.0
 	 */
 	public function run_hourly_task(): void {
-		$enabled = (bool) get_option_or_constant( IS_VULNZ_ENABLED, 'VULNZ_AGENT_ENABLED', false );
+		$enabled = (bool) filter_var( get_option_or_constant( IS_VULNZ_ENABLED, 'VULNZ_AGENT_ENABLED', false ), FILTER_VALIDATE_BOOLEAN );
 
 		if ( $enabled ) {
 			$this->sync_website_with_vulnz();
@@ -173,6 +193,8 @@ class Plugin {
 
 	/**
 	 * Plugin activation: schedule our cron if not already scheduled.
+	 *
+	 * @since 1.0.0
 	 */
 	public static function activate(): void {
 		if ( ! \wp_next_scheduled( SCHEDULE_NAME ) ) {
@@ -183,6 +205,8 @@ class Plugin {
 
 	/**
 	 * Plugin deactivation: clear the scheduled cron hook.
+	 *
+	 * @since 1.0.0
 	 */
 	public static function deactivate(): void {
 		\wp_clear_scheduled_hook( SCHEDULE_NAME );
@@ -190,13 +214,18 @@ class Plugin {
 
 	/**
 	 * Ajax handler for the "Sync Now" button.
+	 *
+	 * @since 1.0.0
 	 */
-	public function ajax_sync_now() {
+	public function ajax_sync_now(): void {
 		if ( ! \current_user_can( 'manage_options' ) ) {
 			\wp_send_json_error( array( 'message' => 'Permission denied.' ), 403 );
 		}
 
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified below
 		$nonce = isset( $_POST['nonce'] ) ? \sanitize_text_field( \wp_unslash( $_POST['nonce'] ) ) : '';
+		// phpcs:enable
+
 		if ( ! \wp_verify_nonce( $nonce, SYNC_NOW_ACTION_NONCE ) ) {
 			\wp_send_json_error( array( 'message' => 'Nonce verification failed.' ), 403 );
 		}
@@ -210,6 +239,8 @@ class Plugin {
 
 	/**
 	 * Sync our website's data with the API.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return bool True on success, false on failure.
 	 */

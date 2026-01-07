@@ -5,6 +5,8 @@
  * @package Vulnz_Agent
  */
 
+declare(strict_types=1);
+
 // Block direct access.
 defined( 'ABSPATH' ) || die();
 
@@ -44,8 +46,8 @@ echo '<table class="form-table">';
 echo '<tr valign="top">';
 printf( '<th scope="row">%s</th>', esc_html__( 'Enable Connection to Vulnz', 'vulnz-agent' ) );
 $is_enabled_via_constant = defined( 'VULNZ_AGENT_ENABLED' );
-// Use constant value if defined, otherwise get from database
-$enabled_value = $is_enabled_via_constant ? constant( 'VULNZ_AGENT_ENABLED' ) : get_option( Vulnz_Agent\IS_VULNZ_ENABLED, false );
+// Use constant value if defined, otherwise get from database with robust boolean handling
+$enabled_value = $is_enabled_via_constant ? constant( 'VULNZ_AGENT_ENABLED' ) : (bool) filter_var( get_option( Vulnz_Agent\IS_VULNZ_ENABLED, false ), FILTER_VALIDATE_BOOLEAN );
 printf(
 	'<td><input type="checkbox" name="%s" value="1" %s %s />%s</td>',
 	esc_attr( Vulnz_Agent\IS_VULNZ_ENABLED ),

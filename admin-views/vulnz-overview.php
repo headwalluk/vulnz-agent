@@ -5,6 +5,8 @@
  * @package Vulnz_Agent
  */
 
+declare(strict_types=1);
+
 // Block direct access.
 defined( 'ABSPATH' ) || die();
 
@@ -21,7 +23,7 @@ $website_data = $api_client->get_website( $our_domain );
 
 echo '<div class="wrap">';
 printf( '<h1>%s</h1>', esc_html( get_admin_page_title() ) );
-printf( '<button id="vulnz-agent-sync-now" class="button button-primary">%s</button>', esc_html__( 'Sync Now', 'vulnz-agent' ) );
+printf( '<button id="vulnz-agent-sync-now" type="button" class="button button-primary">%s</button>', esc_html__( 'Sync Now', 'vulnz-agent' ) );
 
 
 if ( empty( $website_data ) ) {

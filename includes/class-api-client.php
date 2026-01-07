@@ -5,6 +5,8 @@
  * @package Vulnz_Agent
  */
 
+declare(strict_types=1);
+
 namespace Vulnz_Agent;
 
 // Block direct access.
@@ -12,6 +14,8 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class Api_Client
+ *
+ * @since 1.0.0
  */
 class Api_Client {
 
@@ -20,17 +24,19 @@ class Api_Client {
 	 *
 	 * @var string
 	 */
-	private $api_url;
+	private string $api_url;
 
 	/**
 	 * The API key.
 	 *
 	 * @var string
 	 */
-	private $api_key;
+	private string $api_key;
 
 	/**
 	 * Constructor.
+	 *
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		$this->api_url = get_option_or_constant( VULNZ_API_URL, 'VULNZ_AGENT_API_URL', DEFAULT_VULNZ_API_URL );
@@ -45,7 +51,9 @@ class Api_Client {
 	/**
 	 * Check if the API is available.
 	 *
-	 * @return boolean
+	 * @since 1.0.0
+	 *
+	 * @return bool
 	 */
 	public function is_available(): bool {
 		if ( empty( $this->api_url ) || empty( $this->api_key ) ) {
@@ -86,10 +94,12 @@ class Api_Client {
 	/**
 	 * Create or update a website.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string     $domain The domain name.
 	 * @param array|null $body   The request body.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function create_or_update_website( string $domain, ?array $body = array() ): bool {
 		$success            = false;
@@ -195,6 +205,8 @@ class Api_Client {
 
 	/**
 	 * Get a website by domain.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param string $domain The domain name.
 	 *

@@ -5,6 +5,8 @@
  * @package Vulnz_Agent
  */
 
+declare(strict_types=1);
+
 namespace Vulnz_Agent;
 
 // Block direct access.
@@ -12,6 +14,8 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Get the main plugin instance.
+ *
+ * @since 1.0.0
  *
  * @return Plugin The plugin instance.
  */
@@ -25,6 +29,8 @@ function get_plugin(): Plugin {
  *
  * Allows configuration via constants in wp-config.php, which is useful for
  * mu-plugins installations where database options aren't easily configurable.
+ *
+ * @since 1.0.0
  *
  * @param string $option_name The option name.
  * @param string $constant_name The constant name to check for override.
@@ -52,6 +58,8 @@ function get_option_or_constant( string $option_name, string $constant_name, $de
 /**
  * Get the API client instance.
  *
+ * @since 1.0.0
+ *
  * @return Api_Client The API client instance.
  */
 function get_api_client(): Api_Client {
@@ -61,6 +69,8 @@ function get_api_client(): Api_Client {
 
 /**
  * Sanitize the API key.
+ *
+ * @since 1.0.0
  *
  * @param string $api_key The API key to sanitize.
  *
@@ -77,6 +87,8 @@ function sanitize_api_key( string $api_key ): string {
 
 /**
  * Sanitize the API key field, handling masked input.
+ *
+ * @since 1.0.0
  *
  * @param string $api_key The API key input value.
  *
@@ -96,6 +108,8 @@ function sanitize_api_key_field( string $api_key ): string {
 /**
  * Get the URL to our settings page.
  *
+ * @since 1.0.0
+ *
  * @return string The settings page URL.
  */
 function get_our_settings_url(): string {
@@ -105,6 +119,8 @@ function get_our_settings_url(): string {
 
 /**
  * Get the cache key for storing website data.
+ *
+ * @since 1.0.0
  *
  * @param string $domain The domain name.
  *
@@ -123,6 +139,8 @@ function get_website_cache_key( string $domain ): ?string {
 
 /**
  * Get the list of installed plugins with their slugs and versions.
+ *
+ * @since 1.0.0
  *
  * @return array List of installed plugins with 'slug' and 'version' keys.
  */
