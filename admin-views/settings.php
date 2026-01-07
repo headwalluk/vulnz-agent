@@ -10,6 +10,10 @@ declare(strict_types=1);
 // Block direct access.
 defined( 'ABSPATH' ) || die();
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template file variables are local scope.
+// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Constants are safe, not user input.
+// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment -- Context is self-explanatory in admin UI.
+
 // Verify user has permission to access this page.
 if ( ! current_user_can( 'manage_options' ) ) {
 	wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'vulnz-agent' ) );
@@ -30,6 +34,7 @@ printf(
 $has_constant_config = defined( 'VULNZ_AGENT_ENABLED' ) || defined( 'VULNZ_AGENT_API_URL' ) || defined( 'VULNZ_AGENT_API_KEY' );
 if ( $has_constant_config ) {
 	echo '<div class="notice notice-info"><p>';
+	/* translators: %s: wp-config.php wrapped in code tag. */
 	printf(
 		esc_html__( 'Note: Some settings are configured via constants in %s and cannot be changed here.', 'vulnz-agent' ),
 		'<code>wp-config.php</code>'
@@ -46,7 +51,7 @@ echo '<table class="form-table">';
 echo '<tr valign="top">';
 printf( '<th scope="row">%s</th>', esc_html__( 'Enable Connection to Vulnz', 'vulnz-agent' ) );
 $is_enabled_via_constant = defined( 'VULNZ_AGENT_ENABLED' );
-// Use constant value if defined, otherwise get from database with robust boolean handling
+// Use constant value if defined, otherwise get from database with robust boolean handling.
 $enabled_value = $is_enabled_via_constant ? constant( 'VULNZ_AGENT_ENABLED' ) : (bool) filter_var( get_option( Vulnz_Agent\IS_VULNZ_ENABLED, false ), FILTER_VALIDATE_BOOLEAN );
 printf(
 	'<td><input type="checkbox" name="%s" value="1" %s %s />%s</td>',
@@ -60,7 +65,7 @@ echo '</tr>';
 echo '<tr valign="top">';
 printf( '<th scope="row">%s</th>', esc_html__( 'API URL', 'vulnz-agent' ) );
 $is_url_via_constant = defined( 'VULNZ_AGENT_API_URL' );
-// Use get_option directly for display, or use the default if empty
+// Use get_option directly for display, or use the default if empty.
 $url_value = $is_url_via_constant ? constant( 'VULNZ_AGENT_API_URL' ) : get_option( Vulnz_Agent\VULNZ_API_URL, Vulnz_Agent\DEFAULT_VULNZ_API_URL );
 printf(
 	'<td><input type="text" name="%s" value="%s" size="%d" %s />%s</td>',
@@ -85,7 +90,7 @@ if ( $is_key_via_constant ) {
 	);
 } else {
 	// Show dummy value if key exists, otherwise empty for new entry.
-	$existing_key = get_option( Vulnz_Agent\VULNZ_API_KEY );
+	$existing_key  = get_option( Vulnz_Agent\VULNZ_API_KEY );
 	$display_value = ! empty( $existing_key ) ? Vulnz_Agent\DUMMY_API_KEY : '';
 	printf(
 		'<td><input type="password" name="%s" value="%s" size="%d" autocomplete="off" placeholder="%s" /></td>',

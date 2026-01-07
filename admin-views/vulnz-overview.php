@@ -10,6 +10,8 @@ declare(strict_types=1);
 // Block direct access.
 defined( 'ABSPATH' ) || die();
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template file variables are local scope.
+
 // Verify user has permission to access this page.
 if ( ! current_user_can( 'manage_options' ) ) {
 	wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'vulnz-agent' ) );
@@ -58,10 +60,10 @@ if ( empty( $website_data ) ) {
 				printf(
 					'<a href="%s" target="_blank" rel="noopener noreferrer" style="display: block; margin-bottom: 4px;"><span class="dashicons dashicons-external" style="font-size: 14px; width: 14px; height: 14px; vertical-align: middle;"></span> %d. %s</a>',
 					esc_url( $vulnerability ),
-					$index,
+					esc_html( (string) $index ),
 					esc_html( $hostname )
 				);
-				$index++;
+				++$index;
 			}
 		} else {
 			printf( '<span style="color: #2c7e2e;">%s</span>', esc_html__( 'No known vulnerabilities', 'vulnz-agent' ) );

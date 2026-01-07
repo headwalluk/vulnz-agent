@@ -25,7 +25,7 @@ delete_option( 'wp_vulnz_last_cron_run' );
 wp_clear_scheduled_hook( 'vulnz_agent' );
 
 // Delete all website cache transients.
-// Pattern: wp_vulnz_website_*
+// Pattern: wp_vulnz_website_*.
 global $wpdb;
 $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'wp_vulnz_website_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_wp_vulnz_website_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery

@@ -16,11 +16,11 @@ define( 'Vulnz_Agent\PLUGIN_DIR', \plugin_dir_path( __FILE__ ) );
 define( 'Vulnz_Agent\PLUGIN_URL', \plugin_dir_url( __FILE__ ) );
 
 // WordPress option names.
-const SETTINGS_GROUP      = 'wp_vulnz_settings';
-const IS_VULNZ_ENABLED    = 'wp_vulnz_enabled';
-const VULNZ_API_URL       = 'wp_vulnz_api_url';
-const VULNZ_API_KEY       = 'wp_vulnz_api_key';
-const LAST_CRON_RUN       = 'wp_vulnz_last_cron_run';
+const SETTINGS_GROUP           = 'wp_vulnz_settings';
+const IS_VULNZ_ENABLED         = 'wp_vulnz_enabled';
+const VULNZ_API_URL            = 'wp_vulnz_api_url';
+const VULNZ_API_KEY            = 'wp_vulnz_api_key';
+const LAST_CRON_RUN            = 'wp_vulnz_last_cron_run';
 const WEBSITE_CACHE_KEY_PREFIX = 'wp_vulnz_website_';
 
 // Cron schedule and action names.
@@ -44,7 +44,7 @@ const PLUGIN_SORT_ORDER = 'title';
 const DUMMY_API_KEY = 'API KEY HIDDEN FOR PRIVACY';
 
 // Admin UI configuration.
-const ADMIN_INPUT_FIELD_SIZE = 50;
-const ADMIN_MENU_POSITION = 80;
-const ADMIN_MENU_ICON = 'dashicons-shield-alt';
+const ADMIN_INPUT_FIELD_SIZE  = 50;
+const ADMIN_MENU_POSITION     = 80;
+const ADMIN_MENU_ICON         = 'dashicons-shield-alt';
 const ADMIN_PAGE_HOOK_SUMMARY = 'toplevel_page_vulnz-agent-summary';

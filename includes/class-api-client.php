@@ -7,6 +7,10 @@
 
 declare(strict_types=1);
 
+// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug logging wrapped in WP_DEBUG checks.
+// phpcs:disable Generic.CodeAnalysis.AssignmentInCondition.Found, Squiz.PHP.DisallowMultipleAssignments -- Intentional assignment in condition for brevity.
+// phpcs:disable Generic.CodeAnalysis.EmptyStatement -- Early return pattern with cache check.
+
 namespace Vulnz_Agent;
 
 // Block direct access.
@@ -107,12 +111,12 @@ class Api_Client {
 
 		if ( ! filter_var( $domain, FILTER_VALIDATE_DOMAIN, array( 'flags' => FILTER_FLAG_HOSTNAME ) ) ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				error_log( '[Vulnz Agent] Invalid domain name provided.' );
+				error_log( '[Vulnz Agent] Invalid domain name provided.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug logging.
 			}
 		} elseif ( ! $this->is_available() ) {
 			// API not available because of bad settings.
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				error_log( '[Vulnz Agent] API client is not properly configured.' );
+				error_log( '[Vulnz Agent] API client is not properly configured.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug logging.
 			}
 		} else {
 			$headers = array(
@@ -120,7 +124,7 @@ class Api_Client {
 				'Content-Type' => 'application/json; charset=utf-8',
 			);
 
-			$get_url = sprintf( '%s/api/websites/%s', $this->api_url, $domain );
+			$get_url      = sprintf( '%s/api/websites/%s', $this->api_url, $domain );
 			$get_response = \wp_remote_get(
 				$get_url,
 				array(
@@ -133,7 +137,10 @@ class Api_Client {
 				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 					error_log( '[Vulnz Agent] API GET request failed: ' . $get_response->get_error_message() );
 				}
-			} elseif ( empty( ( $response_code = \wp_remote_retrieve_response_code( $get_response ) ) ) ) {
+			}
+
+			$response_code = \wp_remote_retrieve_response_code( $get_response );
+			if ( empty( $response_code ) ) {
 				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 					error_log( '[Vulnz Agent] Empty response code from API.' );
 				}
