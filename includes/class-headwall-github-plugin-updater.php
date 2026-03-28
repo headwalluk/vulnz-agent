@@ -211,6 +211,7 @@ class Headwall_GitHub_Plugin_Updater {
 			&& in_array( $this->plugin_basename, $options['plugins'], true )
 		) {
 			delete_transient( $this->get_cache_key() );
+			delete_site_transient( 'update_plugins' );
 		}
 	}
 
