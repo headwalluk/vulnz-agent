@@ -27,8 +27,8 @@ define( 'VULNZ_AGENT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require_once VULNZ_AGENT_PLUGIN_DIR . 'constants.php';
 
+require_once VULNZ_AGENT_PLUGIN_DIR . 'functions-private.php';
 require_once VULNZ_AGENT_PLUGIN_DIR . 'functions.php';
-require_once VULNZ_AGENT_PLUGIN_DIR . 'functions-public.php';
 require_once VULNZ_AGENT_PLUGIN_DIR . 'includes/class-plugin.php';
 require_once VULNZ_AGENT_PLUGIN_DIR . 'includes/class-admin-hooks.php';
 require_once VULNZ_AGENT_PLUGIN_DIR . 'includes/class-api-client.php';

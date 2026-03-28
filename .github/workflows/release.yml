@@ -56,9 +56,15 @@ jobs:
           rsync -a \
             --exclude '.git' \
             --exclude '.github' \
+            --exclude '.claude' \
+            --exclude '.projectile' \
+            --exclude '.gitignore' \
             --exclude 'node_modules' \
             --exclude 'package' \
             --exclude 'dist' \
+            --exclude 'docs' \
+            --exclude 'dev-notes' \
+            --exclude '*.md' \
             ./ "package/$SLUG/"
 
           # Create versioned zip and stable zip
