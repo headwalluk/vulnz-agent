@@ -29,6 +29,16 @@ A WordPress plugin that syncs your site's plugin inventory to the [Vulnz](https:
 - **[API Integration](docs/api-integration.md)** — sync behaviour, data transmitted, and security
 - **[GitHub Auto-Updates](docs/github-auto-updates.md)** — how auto-updates work, caching, and how to disable
 
+## External Service & Privacy
+
+This plugin communicates with the Vulnz API at `https://api.vulnz.net` to sync your site's data for vulnerability monitoring. An API key from [vulnz.net](https://vulnz.net) is required.
+
+**Data transmitted:** site title, domain, WordPress version, PHP version, database server type/version, SSL status, admin login URL, and installed plugins (slug and version only).
+
+**Not transmitted:** no personal data, user accounts, site content, or credentials.
+
+See [API Integration](docs/api-integration.md) for full details.
+
 ## Links
 
 - **Vulnz Platform:** [vulnz.net](https://vulnz.net)
