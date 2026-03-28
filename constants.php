@@ -5,15 +5,10 @@
  * @package Vulnz_Agent
  */
 
-declare(strict_types=1);
-
 namespace Vulnz_Agent;
 
 // Block direct access.
 defined( 'ABSPATH' ) || die();
-
-define( 'Vulnz_Agent\PLUGIN_DIR', \plugin_dir_path( __FILE__ ) );
-define( 'Vulnz_Agent\PLUGIN_URL', \plugin_dir_url( __FILE__ ) );
 
 // WordPress option names.
 const SETTINGS_GROUP           = 'wp_vulnz_settings';
@@ -42,6 +37,9 @@ const PLUGIN_SORT_ORDER = 'title';
 
 // Dummy value for API key field to prevent leaking actual key in HTML.
 const DUMMY_API_KEY = 'API KEY HIDDEN FOR PRIVACY';
+
+// Vulnz dashboard base URL.
+const VULNZ_DASHBOARD_URL = 'https://vulnz.net/my-account/vulnz-dashboard';
 
 // Admin UI configuration.
 const ADMIN_INPUT_FIELD_SIZE  = 50;

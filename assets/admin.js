@@ -6,7 +6,10 @@ jQuery(document).ready(function ($) {
     e.preventDefault();
 
     var $button = $(this);
-    $button.prop('disabled', true);
+    var labelDefault = $button.data('label');
+    var labelSyncing = $button.data('syncing');
+
+    $button.prop('disabled', true).text(labelSyncing);
 
     $.post(ajaxurl, {
       action: 'vulnz_agent_sync_now',
@@ -14,10 +17,10 @@ jQuery(document).ready(function ($) {
     })
       .done(function (response) {
         if (response.success) {
-          alert('Sync complete!');
           location.reload();
         } else {
           alert('Error: ' + response.data.message);
+          $button.prop('disabled', false).text(labelDefault);
         }
       })
       .fail(function (jqXHR) {
@@ -30,9 +33,7 @@ jQuery(document).ready(function ($) {
           message = jqXHR.responseJSON.data.message;
         }
         alert('Error: ' + message);
-      })
-      .always(function () {
-        $button.prop('disabled', false);
+        $button.prop('disabled', false).text(labelDefault);
       });
   });
 });

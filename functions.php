@@ -5,8 +5,6 @@
  * @package Vulnz_Agent
  */
 
-declare(strict_types=1);
-
 namespace Vulnz_Agent;
 
 // Block direct access.
@@ -34,24 +32,26 @@ function get_plugin(): Plugin {
  *
  * @param string $option_name The option name.
  * @param string $constant_name The constant name to check for override.
- * @param mixed  $default The default value if neither option nor constant exists.
+ * @param mixed  $fallback The default value if neither option nor constant exists.
  *
  * @return mixed The option value, constant value, or default.
  */
-function get_option_or_constant( string $option_name, string $constant_name, $default = false ) {
+function get_option_or_constant( string $option_name, string $constant_name, $fallback = false ) {
+	$result = $fallback;
+
 	// Check if constant is defined in the current namespace first.
 	$namespaced_constant = __NAMESPACE__ . '\\' . $constant_name;
 	if ( defined( $namespaced_constant ) ) {
-		return constant( $namespaced_constant );
+		$result = constant( $namespaced_constant );
+	} elseif ( defined( $constant_name ) ) {
+		// Check if constant is defined in global namespace (wp-config.php).
+		$result = constant( $constant_name );
+	} else {
+		// Fall back to database option.
+		$result = \get_option( $option_name, $fallback );
 	}
 
-	// Check if constant is defined in global namespace (wp-config.php).
-	if ( defined( $constant_name ) ) {
-		return constant( $constant_name );
-	}
-
-	// Fall back to database option.
-	return \get_option( $option_name, $default );
+	return $result;
 }
 
 

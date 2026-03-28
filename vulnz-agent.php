@@ -3,7 +3,7 @@
  * Plugin Name:       Vulnz Agent
  * Plugin URI:        https://github.com/headwalluk/vulnz-agent
  * Description:       A companion WordPress plugin for the Vulnz project that syncs site data with the Vulnz API.
- * Version:           2.2.1
+ * Version:           2.3.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            Paul Faulkner
@@ -16,22 +16,26 @@
  * @package Vulnz_Agent
  */
 
-declare(strict_types=1);
-
 // Block direct access.
 defined( 'ABSPATH' ) || die();
 
-// Define the plugin version here for easy bumping during releases.
-define( 'Vulnz_Agent\PLUGIN_VERSION', '2.2.1' );
-define( 'Vulnz_Agent\PLUGIN_FILE', __FILE__ );
+// Plugin-level constants (global scope, prefixed).
+define( 'VULNZ_AGENT_PLUGIN_VERSION', '2.3.0' );
+define( 'VULNZ_AGENT_PLUGIN_FILE', __FILE__ );
+define( 'VULNZ_AGENT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'VULNZ_AGENT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
-require_once plugin_dir_path( __FILE__ ) . 'constants.php';
+require_once VULNZ_AGENT_PLUGIN_DIR . 'constants.php';
 
-require_once Vulnz_Agent\PLUGIN_DIR . 'functions.php';
-require_once Vulnz_Agent\PLUGIN_DIR . 'functions-public.php';
-require_once Vulnz_Agent\PLUGIN_DIR . 'includes/class-plugin.php';
-require_once Vulnz_Agent\PLUGIN_DIR . 'includes/class-admin-hooks.php';
-require_once Vulnz_Agent\PLUGIN_DIR . 'includes/class-api-client.php';
+require_once VULNZ_AGENT_PLUGIN_DIR . 'functions.php';
+require_once VULNZ_AGENT_PLUGIN_DIR . 'functions-public.php';
+require_once VULNZ_AGENT_PLUGIN_DIR . 'includes/class-plugin.php';
+require_once VULNZ_AGENT_PLUGIN_DIR . 'includes/class-admin-hooks.php';
+require_once VULNZ_AGENT_PLUGIN_DIR . 'includes/class-api-client.php';
+require_once VULNZ_AGENT_PLUGIN_DIR . 'includes/class-headwall-github-plugin-updater.php';
+
+// GitHub-based auto-updates.
+new Headwall_GitHub_Plugin_Updater( __FILE__, 'headwalluk/vulnz-agent' );
 
 // Register activation/deactivation hooks for scheduling the hourly task.
 \register_activation_hook( __FILE__, array( '\Vulnz_Agent\Plugin', 'activate' ) );

@@ -5,8 +5,6 @@
  * @package Vulnz_Agent
  */
 
-declare(strict_types=1);
-
 // Block direct access.
 defined( 'ABSPATH' ) || die();
 

@@ -1,0 +1,134 @@
+# Copyright (C) 2026 Paul Faulkner
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Language: es_ES\n"
+"Project-Id-Version: Vulnz Agent 2.2.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vulnz-agent\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-03-28T12:03:29+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: vulnz-agent\n"
+
+#. Plugin Name of the plugin
+#: vulnz-agent.php
+#: includes/class-plugin.php:117
+#: includes/class-plugin.php:118
+msgid "Vulnz Agent"
+msgstr "Vulnz Agent"
+
+#. Plugin URI of the plugin
+#: vulnz-agent.php
+msgid "https://github.com/headwalluk/vulnz-agent"
+msgstr "https://github.com/headwalluk/vulnz-agent"
+
+#. Description of the plugin
+#: vulnz-agent.php
+msgid "A companion WordPress plugin for the Vulnz project that syncs site data with the Vulnz API."
+msgstr "Un complemento de WordPress complementario para el proyecto Vulnz que sincroniza los datos del sitio con la API de Vulnz."
+
+#. Author of the plugin
+#: vulnz-agent.php
+msgid "Paul Faulkner"
+msgstr "Paul Faulkner"
+
+#. Author URI of the plugin
+#: vulnz-agent.php
+msgid "https://headwall-hosting.com/"
+msgstr "https://headwall-hosting.com/"
+
+#: admin-views/settings.php:17
+#: admin-views/vulnz-overview.php:15
+msgid "You do not have sufficient permissions to access this page."
+msgstr "No tienes los permisos necesarios para acceder a esta página."
+
+#: admin-views/settings.php:23
+msgid "You can get your API key by logging in to your Vulnz account and generating a new key in the dashboard."
+msgstr "Puedes obtener tu clave API iniciando sesión en tu cuenta de Vulnz y generando una nueva clave en el panel de control."
+
+#: admin-views/settings.php:27
+msgid "Default API URL (base URL without /api path):"
+msgstr "URL predeterminada de la API (URL base sin la ruta /api):"
+
+#: admin-views/settings.php:37
+#, php-format
+msgid "Note: Some settings are configured via constants in %s and cannot be changed here."
+msgstr "Nota: Algunos ajustes se configuran mediante constantes en %s y no se pueden modificar aquí."
+
+#: admin-views/settings.php:50
+msgid "Enable Connection to Vulnz"
+msgstr "Habilitar la conexión con Vulnz"
+
+#: admin-views/settings.php:59
+#: admin-views/settings.php:74
+#: admin-views/settings.php:87
+msgid "(Set via wp-config.php)"
+msgstr "(Configurar a través de wp-config.php)"
+
+#: admin-views/settings.php:64
+msgid "API URL"
+msgstr "URL de la API"
+
+#: admin-views/settings.php:79
+msgid "API Key"
+msgstr "Clave API"
+
+#: admin-views/settings.php:98
+msgid "Enter new API key to update"
+msgstr "Introduce una nueva clave API para actualizar"
+
+#: admin-views/vulnz-overview.php:26
+msgid "Sync Now"
+msgstr "Sincronizar ahora"
+
+#: admin-views/vulnz-overview.php:30
+msgid "No data available for this website. Please click \"Sync Now\" to retrieve data from the API."
+msgstr "No hay datos disponibles para este sitio web. Haz clic en «Sincronizar ahora» para recuperar los datos de la API."
+
+#: admin-views/vulnz-overview.php:32
+msgid "No plugin data available for this website."
+msgstr "No hay datos de plugins disponibles para este sitio web."
+
+#: admin-views/vulnz-overview.php:34
+msgid "Installed Plugins"
+msgstr "Complementos instalados"
+
+#: admin-views/vulnz-overview.php:38
+msgid "Plugin"
+msgstr "Complemento"
+
+#: admin-views/vulnz-overview.php:39
+msgid "Version"
+msgstr "Versión"
+
+#: admin-views/vulnz-overview.php:40
+msgid "Vulnerabilities"
+msgstr "Vulnerabilidades"
+
+#: admin-views/vulnz-overview.php:67
+msgid "No known vulnerabilities"
+msgstr "No se conocen vulnerabilidades"
+
+#: includes/class-admin-hooks.php:72
+msgid "Vulnz Agent API is not enabled. "
+msgstr "La API de Vulnz Agent no está habilitada. "
+
+#: includes/class-admin-hooks.php:74
+msgid "Click here to enable"
+msgstr "Haz clic aquí para activarlo"
+
+#: includes/class-admin-hooks.php:91
+#: includes/class-plugin.php:140
+#: includes/class-plugin.php:141
+msgid "Settings"
+msgstr "Configuración"
+
+#: includes/class-plugin.php:128
+#: includes/class-plugin.php:129
+msgid "Summary"
+msgstr "Resumen"

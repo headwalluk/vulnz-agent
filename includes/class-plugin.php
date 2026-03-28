@@ -5,8 +5,6 @@
  * @package Vulnz_Agent
  */
 
-declare(strict_types=1);
-
 namespace Vulnz_Agent;
 
 // Block direct access.
@@ -75,7 +73,7 @@ class Plugin {
 		\add_action( 'admin_enqueue_scripts', array( $admin_hooks, 'enqueue_assets' ) );
 		\add_action( 'admin_notices', array( $admin_hooks, 'admin_notice' ) );
 
-		\add_filter( 'plugin_action_links_' . \plugin_basename( PLUGIN_FILE ), array( $admin_hooks, 'add_settings_link' ) );
+		\add_filter( 'plugin_action_links_' . \plugin_basename( VULNZ_AGENT_PLUGIN_FILE ), array( $admin_hooks, 'add_settings_link' ) );
 	}
 
 	/**
@@ -125,7 +123,17 @@ class Plugin {
 			ADMIN_MENU_POSITION
 		);
 
-		\add_submenu_page( 'vulnz-agent-summary', \__( 'Summary', 'vulnz-agent' ), \__( 'Summary', 'vulnz-agent' ), 'manage_options', 'vulnz-agent-summary', array( $admin_hooks, 'render_summary_page' ) );
+		\add_submenu_page(
+			'vulnz-agent-summary',
+			\__( 'Summary', 'vulnz-agent' ),
+			\__( 'Summary', 'vulnz-agent' ),
+			'manage_options',
+			'vulnz-agent-summary',
+			array(
+				$admin_hooks,
+				'render_summary_page',
+			)
+		);
 
 		\add_submenu_page(
 			'vulnz-agent-summary',
@@ -187,7 +195,8 @@ class Plugin {
 			$this->sync_website_with_vulnz();
 
 			// Record when the task last ran for admin visibility.
-			\update_option( LAST_CRON_RUN, \current_time( 'mysql' ) );
+			$now = new \DateTime( 'now', \wp_timezone() );
+			\update_option( LAST_CRON_RUN, $now->format( 'Y-m-d H:i:s T' ) );
 		}
 	}
 
@@ -222,9 +231,9 @@ class Plugin {
 			\wp_send_json_error( array( 'message' => 'Permission denied.' ), 403 );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified below
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified below
 		$nonce = isset( $_POST['nonce'] ) ? \sanitize_text_field( \wp_unslash( $_POST['nonce'] ) ) : '';
-		// phpcs:enable
+        // phpcs:enable
 
 		if ( ! \wp_verify_nonce( $nonce, SYNC_NOW_ACTION_NONCE ) ) {
 			\wp_send_json_error( array( 'message' => 'Nonce verification failed.' ), 403 );
@@ -245,28 +254,56 @@ class Plugin {
 	 * @return bool True on success, false on failure.
 	 */
 	public function sync_website_with_vulnz(): bool {
+		$result     = false;
 		$api_client = $this->get_api_client();
-		if ( ! $api_client->is_available() ) {
-			return false;
+
+		if ( $api_client->is_available() ) {
+			$site_url = \site_url();
+			$domain   = \wp_parse_url( $site_url, PHP_URL_HOST );
+
+			if ( is_string( $domain ) && ! empty( $domain ) ) {
+				$body = array(
+					'title'             => \get_bloginfo( 'name' ),
+					'is_ssl'            => \is_ssl(),
+					'versions'          => $this->get_version_info(),
+					'meta'              => array(
+						'Admin' => \wp_login_url(),
+					),
+					'wordpress-plugins' => get_installed_plugins(),
+				);
+
+				$result = $api_client->create_or_update_website( $domain, $body );
+			}
 		}
 
-		$site_url = \site_url();
-		$domain   = \wp_parse_url( $site_url, PHP_URL_HOST );
+		return $result;
+	}
 
-		if ( ! is_string( $domain ) || empty( $domain ) ) {
-			return false;
+	/**
+	 * Gather version information for the API payload.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @return array Version data including WordPress, PHP, and database server.
+	 */
+	private function get_version_info(): array {
+		global $wpdb;
+
+		$db_version     = $wpdb->db_version();
+		$db_server_info = $wpdb->db_server_info();
+		$db_server_type = 'unknown';
+
+		if ( is_string( $db_server_info ) && stripos( $db_server_info, 'mariadb' ) !== false ) {
+			$db_server_type = 'mariadb';
+		} elseif ( ! empty( $db_version ) ) {
+			$db_server_type = 'mysql';
 		}
 
-		$body = array(
-			'title'             => \get_bloginfo( 'name' ),
-			'is_ssl'            => \is_ssl(),
-			'meta'              => array(
-				'Admin'      => \wp_login_url(),
-				'WP Version' => \get_bloginfo( 'version' ),
-			),
-			'wordpress-plugins' => get_installed_plugins(),
+		return array(
+			'wordpress_version' => \get_bloginfo( 'version' ),
+			'php_version'       => phpversion(),
+			'db_server_type'    => $db_server_type,
+			'db_server_version' => $db_version,
 		);
-
-		return $api_client->create_or_update_website( $domain, $body );
 	}
 }

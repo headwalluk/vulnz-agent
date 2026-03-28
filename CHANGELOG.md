@@ -5,6 +5,39 @@ All notable changes to Vulnz Agent will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-03-28
+
+### Added
+
+- **GitHub auto-updater:** Plugin now checks GitHub Releases for new versions and integrates with the WordPress update system. Includes 12-hour transient caching to minimise API calls.
+- **`headwall_github_updater_enabled` filter:** Conditionally disable auto-updates per plugin, per environment, or globally.
+- **Portable updater class:** `Headwall_GitHub_Plugin_Updater` can be dropped into any GitHub-hosted WordPress plugin with a `class_exists` guard to prevent conflicts.
+- **Version data in API sync:** Now sends `wordpress_version`, `php_version`, `db_server_type`, and `db_server_version` in a `versions` object.
+- **Last synced timestamp** displayed on the Summary page next to the Sync Now button.
+- **Vulnz dashboard links** on the Summary page: link to the main dashboard and site-specific detail view on vulnz.net.
+- **Documentation restructured** into `docs/` directory:
+  - `docs/installation.md` — regular and mu-plugin deployment
+  - `docs/configuration.md` — admin settings and wp-config.php constants
+  - `docs/api-integration.md` — sync behaviour, data transmitted, and security
+  - `docs/github-auto-updates.md` — updater usage, caching, and disable filter
+- **Translation support:** Added POT template and 8 locale translations (de, el, en_GB, es, fr, it, nl, pl)
+
+### Changed
+
+- Removed `declare(strict_types=1)` from all PHP files to align with WordPress ecosystem guidance
+- Refactored functions to follow SESE (single-entry single-exit) pattern: `enqueue_assets`, `is_available`, `get_option_or_constant`, `sync_website_with_vulnz`
+- Plugin-level constants moved to global scope with `VULNZ_AGENT_` prefix: `VULNZ_AGENT_PLUGIN_VERSION`, `VULNZ_AGENT_PLUGIN_FILE`, `VULNZ_AGENT_PLUGIN_DIR`, `VULNZ_AGENT_PLUGIN_URL`
+- WP version moved from `meta` to `versions` object in API payload (was being ignored by backend)
+- Date/time storage now uses human-readable format with timezone (`Y-m-d H:i:s T`)
+- Renamed `$default` parameter to `$fallback` in `get_option_or_constant()` to avoid reserved keyword
+- Sync Now button shows "Syncing..." during AJAX call; success no longer shows an alert, just reloads the page
+- `README.md` slimmed to project summary with links to `docs/`
+- `readme.txt` updated: `Tested up to: 6.9`, condensed 2.0.0 changelog, removed migration notices
+
+### Removed
+
+- "Migrating from wp-vulnz (1.x)" section from README and readme.txt
+
 ## [2.2.1] - 2026-01-07
 
 ### Fixed
@@ -215,6 +248,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[2.3.0]: https://github.com/headwalluk/vulnz-agent/compare/v2.2.1...v2.3.0
+[2.2.1]: https://github.com/headwalluk/vulnz-agent/compare/v2.2.0...v2.2.1
+[2.2.0]: https://github.com/headwalluk/vulnz-agent/compare/v2.1.2...v2.2.0
+[2.1.2]: https://github.com/headwalluk/vulnz-agent/compare/v2.1.1...v2.1.2
+[2.1.1]: https://github.com/headwalluk/vulnz-agent/compare/v2.1.0...v2.1.1
+[2.1.0]: https://github.com/headwalluk/vulnz-agent/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/headwalluk/vulnz-agent/compare/v1.0.2...v2.0.0
 [1.0.2]: https://github.com/headwalluk/vulnz-agent/compare/v1.0.0...v1.0.2
 [1.0.0]: https://github.com/headwalluk/vulnz-agent/compare/v0.1.0...v1.0.0

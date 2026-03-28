@@ -5,8 +5,6 @@
  * @package Vulnz_Agent
  */
 
-declare(strict_types=1);
-
 namespace Vulnz_Agent;
 
 use Error;
@@ -29,21 +27,19 @@ class Admin_Hooks {
 	 * @param string $hook The current admin page hook.
 	 */
 	public function enqueue_assets( string $hook ): void {
-		if ( ADMIN_PAGE_HOOK_SUMMARY !== $hook ) {
-			return;
+		if ( ADMIN_PAGE_HOOK_SUMMARY === $hook ) {
+			\wp_enqueue_style( 'vulnz-agent-admin', VULNZ_AGENT_PLUGIN_URL . 'assets/admin.css', array(), VULNZ_AGENT_PLUGIN_VERSION );
+
+			\wp_enqueue_script( 'vulnz-agent-admin', VULNZ_AGENT_PLUGIN_URL . 'assets/admin.js', array( 'jquery' ), VULNZ_AGENT_PLUGIN_VERSION, true );
+
+			\wp_localize_script(
+				'vulnz-agent-admin',
+				'vulnz_agent',
+				array(
+					'nonce' => \wp_create_nonce( SYNC_NOW_ACTION_NONCE ),
+				)
+			);
 		}
-
-		\wp_enqueue_style( 'vulnz-agent-admin', PLUGIN_URL . 'assets/admin.css', array(), PLUGIN_VERSION );
-
-		\wp_enqueue_script( 'vulnz-agent-admin', PLUGIN_URL . 'assets/admin.js', array( 'jquery' ), PLUGIN_VERSION, true );
-
-		\wp_localize_script(
-			'vulnz-agent-admin',
-			'vulnz_agent',
-			array(
-				'nonce' => \wp_create_nonce( SYNC_NOW_ACTION_NONCE ),
-			)
-		);
 	}
 
 	/**
@@ -52,7 +48,7 @@ class Admin_Hooks {
 	 * @since 1.0.0
 	 */
 	public function render_summary_page() {
-		include_once PLUGIN_DIR . 'admin-views/vulnz-overview.php';
+		include_once VULNZ_AGENT_PLUGIN_DIR . 'admin-views/vulnz-overview.php';
 	}
 
 	/**
@@ -61,7 +57,7 @@ class Admin_Hooks {
 	 * @since 1.0.0
 	 */
 	public function render_settings_page() {
-		include_once PLUGIN_DIR . 'admin-views/settings.php';
+		include_once VULNZ_AGENT_PLUGIN_DIR . 'admin-views/settings.php';
 	}
 
 	/**

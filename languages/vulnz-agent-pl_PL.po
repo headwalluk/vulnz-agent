@@ -1,0 +1,134 @@
+# Copyright (C) 2026 Paul Faulkner
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Language: pl_PL\n"
+"Project-Id-Version: Vulnz Agent 2.2.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vulnz-agent\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-03-28T12:03:29+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: vulnz-agent\n"
+
+#. Plugin Name of the plugin
+#: vulnz-agent.php
+#: includes/class-plugin.php:117
+#: includes/class-plugin.php:118
+msgid "Vulnz Agent"
+msgstr "Vulnz Agent"
+
+#. Plugin URI of the plugin
+#: vulnz-agent.php
+msgid "https://github.com/headwalluk/vulnz-agent"
+msgstr "https://github.com/headwalluk/vulnz-agent"
+
+#. Description of the plugin
+#: vulnz-agent.php
+msgid "A companion WordPress plugin for the Vulnz project that syncs site data with the Vulnz API."
+msgstr "Wtyczka WordPress towarzysząca projektowi Vulnz, która synchronizuje dane witryny z interfejsem API Vulnz."
+
+#. Author of the plugin
+#: vulnz-agent.php
+msgid "Paul Faulkner"
+msgstr "Paul Faulkner"
+
+#. Author URI of the plugin
+#: vulnz-agent.php
+msgid "https://headwall-hosting.com/"
+msgstr "https://headwall-hosting.com/"
+
+#: admin-views/settings.php:17
+#: admin-views/vulnz-overview.php:15
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Nie masz wystarczających uprawnień, aby uzyskać dostęp do tej strony."
+
+#: admin-views/settings.php:23
+msgid "You can get your API key by logging in to your Vulnz account and generating a new key in the dashboard."
+msgstr "Aby uzyskać klucz API, zaloguj się na swoje konto Vulnz i wygeneruj nowy klucz w panelu użytkownika."
+
+#: admin-views/settings.php:27
+msgid "Default API URL (base URL without /api path):"
+msgstr "Domyślny adres URL interfejsu API (adres bazowy bez ścieżki /api):"
+
+#: admin-views/settings.php:37
+#, php-format
+msgid "Note: Some settings are configured via constants in %s and cannot be changed here."
+msgstr "Uwaga: Niektóre ustawienia są konfigurowane za pomocą stałych w pliku %s i nie można ich tutaj zmienić."
+
+#: admin-views/settings.php:50
+msgid "Enable Connection to Vulnz"
+msgstr "Włącz połączenie z Vulnz"
+
+#: admin-views/settings.php:59
+#: admin-views/settings.php:74
+#: admin-views/settings.php:87
+msgid "(Set via wp-config.php)"
+msgstr "(Ustaw w pliku wp-config.php)"
+
+#: admin-views/settings.php:64
+msgid "API URL"
+msgstr "Adres URL interfejsu API"
+
+#: admin-views/settings.php:79
+msgid "API Key"
+msgstr "Klucz API"
+
+#: admin-views/settings.php:98
+msgid "Enter new API key to update"
+msgstr "Wprowadź nowy klucz API, aby zaktualizować"
+
+#: admin-views/vulnz-overview.php:26
+msgid "Sync Now"
+msgstr "Zsynchronizuj teraz"
+
+#: admin-views/vulnz-overview.php:30
+msgid "No data available for this website. Please click \"Sync Now\" to retrieve data from the API."
+msgstr "Brak dostępnych danych dla tej strony internetowej. Kliknij „Synchronizuj teraz”, aby pobrać dane z interfejsu API."
+
+#: admin-views/vulnz-overview.php:32
+msgid "No plugin data available for this website."
+msgstr "Brak danych dotyczących wtyczek dla tej strony internetowej."
+
+#: admin-views/vulnz-overview.php:34
+msgid "Installed Plugins"
+msgstr "Zainstalowane wtyczki"
+
+#: admin-views/vulnz-overview.php:38
+msgid "Plugin"
+msgstr "Wtyczka"
+
+#: admin-views/vulnz-overview.php:39
+msgid "Version"
+msgstr "Wersja"
+
+#: admin-views/vulnz-overview.php:40
+msgid "Vulnerabilities"
+msgstr "Luki w zabezpieczeniach"
+
+#: admin-views/vulnz-overview.php:67
+msgid "No known vulnerabilities"
+msgstr "Brak znanych luk w zabezpieczeniach"
+
+#: includes/class-admin-hooks.php:72
+msgid "Vulnz Agent API is not enabled. "
+msgstr "Interfejs API Vulnz Agent nie jest włączony. "
+
+#: includes/class-admin-hooks.php:74
+msgid "Click here to enable"
+msgstr "Kliknij tutaj, aby włączyć"
+
+#: includes/class-admin-hooks.php:91
+#: includes/class-plugin.php:140
+#: includes/class-plugin.php:141
+msgid "Settings"
+msgstr "Ustawienia"
+
+#: includes/class-plugin.php:128
+#: includes/class-plugin.php:129
+msgid "Summary"
+msgstr "Podsumowanie"

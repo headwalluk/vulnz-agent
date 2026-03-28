@@ -2,9 +2,9 @@
 Contributors: headwalluk
 Tags: security, vulnerabilities, api, monitoring, vulnz
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 2.2.1
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,7 +36,7 @@ This plugin communicates with the Vulnz API at `https://api.vulnz.net`. You will
 **Data Transmitted:**
 
 * Site title and URL
-* WordPress version
+* WordPress version, PHP version, database server type and version
 * SSL status
 * Admin login URL
 * List of installed plugins (slug and version only)
@@ -71,7 +71,7 @@ Yes. The plugin sends data to the Vulnz API at `https://api.vulnz.net`. This is 
 
 The plugin sends:
 * Your site's URL and title
-* WordPress version
+* WordPress version, PHP version, database server type and version
 * Whether SSL is enabled
 * Your admin login URL
 * A list of installed plugins (name and version only)
@@ -101,6 +101,19 @@ Yes. Each site needs the plugin installed and configured with its own settings. 
 
 == Changelog ==
 
+= 2.3.0 (2026-03-28) =
+* Added: GitHub auto-updater with 12-hour transient caching
+* Added: `headwall_github_updater_enabled` filter to disable auto-updates
+* Added: WordPress, PHP, and database version data sent to Vulnz API
+* Added: Last synced timestamp and Vulnz dashboard links on Summary page
+* Added: Translation support (8 locales plus POT template)
+* Added: Documentation in `docs/` directory (installation, configuration, API, auto-updates)
+* Changed: Removed `declare(strict_types=1)` per WordPress ecosystem guidance
+* Changed: Functions refactored to SESE pattern; plugin constants moved to global scope
+* Changed: Sync Now button shows "Syncing..." during AJAX call
+* Changed: README slimmed down with links to `docs/`
+* Removed: Migration section for wp-vulnz 1.x
+
 = 2.1.2 (2025-12-30) =
 * Added: GitHub Actions release workflow publishes both a stable asset (`vulnz-agent.zip`) and a versioned asset for each release
 * Docs: README updated with a stable latest download URL
@@ -129,44 +142,9 @@ Yes. Each site needs the plugin installed and configured with its own settings. 
 * Changed: Error log messages use clean [Vulnz Agent] prefix
 
 = 2.0.0 (2025-12-29) =
-**Major Update - Breaking Changes**
-
-* **BREAKING:** Renamed plugin from "wp-vulnz" to "vulnz-agent"
-* **BREAKING:** Changed namespace from `WP_Vulnz` to `Vulnz_Agent`
-* **BREAKING:** Renamed functions: `wp_vulnz_*()` → `vulnz_agent_*()`
-* **BREAKING:** Updated admin menu slugs: `wp-vulnz-*` → `vulnz-agent-*`
-* **BREAKING:** Changed text domain from `wp-vulnz` to `vulnz-agent`
-* **BREAKING:** Updated hook names and AJAX actions to use `vulnz_agent` prefix
-* **BREAKING:** Raised minimum PHP version to 8.3 (8.0 supported, 8.4 preferred)
-* Added: Plugin list sorting (configurable by title or slug)
-* Added: Multi-level sort (vulnerabilities first, then alphabetically)
-* Added: wp-config.php constant support (VULNZ_AGENT_ENABLED, VULNZ_AGENT_API_URL, VULNZ_AGENT_API_KEY)
-* Added: Settings page shows when constants are defined and disables those fields
-* Security: API key masking in settings form
-* Security: Capability checks in admin templates (defense-in-depth)
-* Security: Production-safe error logging (only when WP_DEBUG enabled)
-* Improved: Code organization with constants for all option names
-* Improved: Removed magic strings throughout codebase
-* Changed: Updated Plugin URI to GitHub repository
-* Changed: API endpoint migrated to api.vulnz.net
-* Note: Database option names unchanged for backward compatibility
-
-= 1.0.2 (Previous) =
-* Tidying up bits-and-bobs in the codebase
-* Added settings link from wp-admin/plugins.php page
-* Moved PLUGIN_VERSION constant for proper updates
-
-= 1.0.0 (Previous) =
-* First stable release
-* Admin Summary and Settings pages
-* Configurable API URL and API Key
-* Hourly background sync and on-demand "Sync Now"
-* Documentation updates
-
-= 0.1.0 (Previous) =
-* Initial release
-
-== Upgrade Notice ==
-
-= 2.0.0 =
-Major update with breaking changes. Plugin renamed from "wp-vulnz" to "vulnz-agent". If you have custom code integrating with this plugin, you'll need to update function names and hooks. Database settings are preserved.
+* Initial release as Vulnz Agent
+* Plugin list sorting (configurable by title or slug)
+* Multi-level sort (vulnerabilities first, then alphabetically)
+* wp-config.php constant support for mu-plugin deployments
+* API key masking, capability checks, production-safe error logging
+* Code organization with constants for all option names

@@ -5,8 +5,6 @@
  * @package Vulnz_Agent
  */
 
-declare(strict_types=1);
-
 // Block direct access.
 defined( 'ABSPATH' ) || die();
 
@@ -22,11 +20,44 @@ $site_url   = \site_url();
 $our_domain = \wp_parse_url( $site_url, PHP_URL_HOST );
 
 $website_data = $api_client->get_website( $our_domain );
+$last_sync    = \get_option( Vulnz_Agent\LAST_CRON_RUN, '' );
 
 echo '<div class="wrap">';
 printf( '<h1>%s</h1>', esc_html( get_admin_page_title() ) );
-printf( '<button id="vulnz-agent-sync-now" type="button" class="button button-primary">%s</button>', esc_html__( 'Sync Now', 'vulnz-agent' ) );
 
+// Action bar: Sync button, last synced, and dashboard links.
+echo '<p>';
+printf(
+	'<button id="vulnz-agent-sync-now" type="button" class="button button-primary" data-label="%s" data-syncing="%s">%s</button> ',
+	esc_attr__( 'Sync Now', 'vulnz-agent' ),
+	esc_attr__( 'Syncing...', 'vulnz-agent' ),
+	esc_html__( 'Sync Now', 'vulnz-agent' )
+);
+
+if ( ! empty( $last_sync ) ) {
+	printf(
+		'<span class="description">%s %s</span> ',
+		esc_html__( 'Last synced:', 'vulnz-agent' ),
+		esc_html( $last_sync )
+	);
+}
+echo '</p>';
+
+// Dashboard links.
+echo '<p>';
+printf(
+	'<a href="%s" target="_blank" rel="noopener noreferrer"><span class="dashicons dashicons-external" style="font-size: 14px; width: 14px; height: 14px; vertical-align: middle;"></span> %s</a>',
+	esc_url( Vulnz_Agent\VULNZ_DASHBOARD_URL . '/' ),
+	esc_html__( 'Vulnz Dashboard', 'vulnz-agent' )
+);
+echo ' &nbsp;|&nbsp; ';
+printf(
+	'<a href="%s" target="_blank" rel="noopener noreferrer"><span class="dashicons dashicons-external" style="font-size: 14px; width: 14px; height: 14px; vertical-align: middle;"></span> %s</a>',
+	esc_url( Vulnz_Agent\VULNZ_DASHBOARD_URL . '/' . $our_domain . '/' ),
+	/* translators: %s: the site's domain name */
+	sprintf( esc_html__( 'View %s on Vulnz', 'vulnz-agent' ), esc_html( $our_domain ) )
+);
+echo '</p>';
 
 if ( empty( $website_data ) ) {
 	echo '<p>' . esc_html__( 'No data available for this website. Please click "Sync Now" to retrieve data from the API.', 'vulnz-agent' ) . '</p>';

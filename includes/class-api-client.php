@@ -5,8 +5,6 @@
  * @package Vulnz_Agent
  */
 
-declare(strict_types=1);
-
 // phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug logging wrapped in WP_DEBUG checks.
 // phpcs:disable Generic.CodeAnalysis.AssignmentInCondition.Found, Squiz.PHP.DisallowMultipleAssignments -- Intentional assignment in condition for brevity.
 // phpcs:disable Generic.CodeAnalysis.EmptyStatement -- Early return pattern with cache check.
@@ -60,39 +58,43 @@ class Api_Client {
 	 * @return bool
 	 */
 	public function is_available(): bool {
+		$available = true;
+
 		if ( empty( $this->api_url ) || empty( $this->api_key ) ) {
-			return false;
+			$available = false;
 		}
 
-		if ( ! filter_var( $this->api_url, FILTER_VALIDATE_URL ) ) {
-			return false;
+		if ( $available && ! filter_var( $this->api_url, FILTER_VALIDATE_URL ) ) {
+			$available = false;
 		}
 
-		$scheme = \wp_parse_url( $this->api_url, PHP_URL_SCHEME );
-		$host   = \wp_parse_url( $this->api_url, PHP_URL_HOST );
+		if ( $available ) {
+			$scheme = \wp_parse_url( $this->api_url, PHP_URL_SCHEME );
+			$host   = \wp_parse_url( $this->api_url, PHP_URL_HOST );
 
-		// Require HTTPS to avoid leaking credentials over plaintext.
-		if ( 'https' !== $scheme ) {
-			return false;
-		}
+			// Require HTTPS to avoid leaking credentials over plaintext.
+			if ( 'https' !== $scheme ) {
+				$available = false;
+			}
 
-		if ( ! is_string( $host ) || '' === $host ) {
-			return false;
-		}
+			if ( $available && ( ! is_string( $host ) || '' === $host ) ) {
+				$available = false;
+			}
 
-		// Block obvious local/loopback/private targets to reduce SSRF risk.
-		if ( 'localhost' === $host || '127.0.0.1' === $host ) {
-			return false;
-		}
+			// Block obvious local/loopback/private targets to reduce SSRF risk.
+			if ( $available && ( 'localhost' === $host || '127.0.0.1' === $host ) ) {
+				$available = false;
+			}
 
-		if ( filter_var( $host, FILTER_VALIDATE_IP ) ) {
-			// If it's an IP, disallow private/reserved ranges.
-			if ( ! filter_var( $host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
-				return false;
+			if ( $available && filter_var( $host, FILTER_VALIDATE_IP ) ) {
+				// If it's an IP, disallow private/reserved ranges.
+				if ( ! filter_var( $host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
+					$available = false;
+				}
 			}
 		}
 
-		return true;
+		return $available;
 	}
 
 	/**
