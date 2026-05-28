@@ -157,7 +157,7 @@ function get_installed_plugins(): array {
 		}
 		$plugins[] = array(
 			'slug'    => $slug,
-			'version' => $plugin_data['Version'],
+			'version' => $plugin_data['Version'] ?? '',
 		);
 	}
 

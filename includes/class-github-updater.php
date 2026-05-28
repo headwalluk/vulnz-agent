@@ -1,44 +1,27 @@
 <?php
 /**
- * GitHub Plugin Updater — drop-in auto-update from GitHub Releases.
+ * GitHub Updater.
  *
- * Portable: copy this file into any WordPress plugin's includes/ directory,
- * require it, and instantiate with one line. The class_exists guard prevents
- * conflicts when multiple plugins bundle the same file.
+ * Hooks into the WordPress plugin update system to check the configured
+ * GitHub repository for new releases and serve them as standard plugin
+ * updates.
  *
- * Usage:
- *   require_once __DIR__ . '/includes/class-headwall-github-plugin-updater.php';
- *   new Headwall_GitHub_Plugin_Updater( __FILE__, 'owner/repo-name' );
- *
- * @package Headwall
- * @version 1.1.0
- * @license GPLv2+
- * @author  Paul Faulkner — Headwall Hosting (https://headwall-hosting.com/)
+ * @package Vulnz_Agent
+ * @since 2.4.0
  */
 
-// Block direct access.
+namespace Vulnz_Agent;
+
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || die();
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound -- Intentionally portable class shared across plugins.
-
-if ( class_exists( 'Headwall_GitHub_Plugin_Updater' ) ) {
-	return;
-}
 
 /**
  * Checks GitHub Releases for plugin updates and hooks into the
  * WordPress plugin update system.
  *
- * @since 1.0.0
+ * @since 2.4.0
  */
-class Headwall_GitHub_Plugin_Updater {
-
-	/**
-	 * Absolute path to the main plugin file.
-	 *
-	 * @var string
-	 */
-	private string $plugin_file;
+class Github_Updater {
 
 	/**
 	 * Plugin basename (e.g. "vulnz-agent/vulnz-agent.php").
@@ -55,48 +38,13 @@ class Headwall_GitHub_Plugin_Updater {
 	private string $plugin_slug;
 
 	/**
-	 * Current installed version from the plugin header.
-	 *
-	 * @var string
-	 */
-	private string $current_version;
-
-	/**
-	 * GitHub repository in "owner/repo" format.
-	 *
-	 * @var string
-	 */
-	private string $github_repo;
-
-	/**
-	 * Transient cache TTL in seconds.
-	 *
-	 * @var int
-	 */
-	private int $cache_ttl;
-
-	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $plugin_file Absolute path to the main plugin file (__FILE__).
-	 * @param string $github_repo GitHub repo in "owner/repo" format.
-	 * @param int    $cache_ttl   Transient cache TTL in seconds. Default 12 hours.
+	 * @since 2.4.0
 	 */
-	public function __construct( string $plugin_file, string $github_repo, int $cache_ttl = 43200 ) {
-		$this->plugin_file     = $plugin_file;
-		$this->plugin_basename = plugin_basename( $plugin_file );
+	public function __construct() {
+		$this->plugin_basename = \plugin_basename( VULNZ_AGENT_PLUGIN_FILE );
 		$this->plugin_slug     = dirname( $this->plugin_basename );
-		$this->github_repo     = $github_repo;
-		$this->cache_ttl       = $cache_ttl;
-
-		// Read current version from plugin header.
-		if ( ! function_exists( 'get_plugin_data' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-		$plugin_data           = get_plugin_data( $plugin_file, false, false );
-		$this->current_version = $plugin_data['Version'] ?? '0.0.0';
 
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_for_update' ) );
 		add_filter( 'plugins_api', array( $this, 'plugin_info' ), 10, 3 );
@@ -104,42 +52,52 @@ class Headwall_GitHub_Plugin_Updater {
 	}
 
 	/**
-	 * Check whether GitHub auto-updates are enabled for this plugin.
+	 * Check whether GitHub auto-updates are enabled.
 	 *
-	 * @since 1.1.0
+	 * @since 2.4.0
 	 *
 	 * @return bool
 	 */
 	private function is_enabled(): bool {
 		/**
-		 * Filter whether GitHub auto-updates are enabled for a plugin.
+		 * Filter whether GitHub auto-updates are enabled for Vulnz Agent.
 		 *
-		 * Return false to disable update checks for the given plugin slug.
-		 * Useful for staging environments, local development, or temporarily
-		 * pinning a plugin to its current version.
+		 * Return false to disable update checks. Useful for staging
+		 * environments, local development, or temporarily pinning the
+		 * plugin to its current version.
 		 *
-		 * @since 1.1.0
+		 * @since 2.4.0
 		 *
-		 * @param bool   $enabled     Whether auto-updates are enabled. Default true.
-		 * @param string $plugin_slug The plugin directory name (e.g. "vulnz-agent").
-		 * @param string $github_repo The GitHub repo in "owner/repo" format.
+		 * @param bool $enabled Whether auto-updates are enabled. Default true.
 		 */
-		return (bool) apply_filters( 'headwall_github_updater_enabled', true, $this->plugin_slug, $this->github_repo ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Shared hook across plugins.
+		return (bool) apply_filters( 'vulnz_agent_updater_enabled', true );
 	}
 
 	/**
 	 * Check GitHub for a newer release and inject into the update transient.
 	 *
-	 * @since 1.0.0
+	 * @since 2.4.0
 	 *
 	 * @param object $transient The update_plugins transient object.
 	 * @return object
 	 */
 	public function check_for_update( $transient ) {
-		if ( ! empty( $transient->checked ) && $this->is_enabled() ) {
+		$checked = is_object( $transient ) && property_exists( $transient, 'checked' ) ? $transient->checked : false;
+
+		if ( empty( $checked ) ) {
+			// Early transient pass — WordPress hasn't populated checked list yet.
+			$this->log( 'check_for_update: transient has no checked list, skipping.' );
+		} elseif ( ! $this->is_enabled() ) {
+			$this->log( 'check_for_update: updates disabled via filter, skipping.' );
+		} else {
 			$release = $this->get_latest_release();
 
-			if ( is_array( $release ) && version_compare( $this->current_version, $release['version'], '<' ) ) {
+			if ( ! is_array( $release ) ) {
+				$this->log( 'check_for_update: no release data returned from GitHub.' );
+			} elseif ( version_compare( VULNZ_AGENT_PLUGIN_VERSION, $release['version'], '>=' ) ) {
+				$this->log( 'check_for_update: current version ' . VULNZ_AGENT_PLUGIN_VERSION . ' is up to date (latest: ' . $release['version'] . ').' );
+			} else {
+				$this->log( 'check_for_update: update available ' . VULNZ_AGENT_PLUGIN_VERSION . ' → ' . $release['version'] . '.' );
 				$transient->response[ $this->plugin_basename ] = (object) array(
 					'slug'        => $this->plugin_slug,
 					'plugin'      => $this->plugin_basename,
@@ -156,7 +114,7 @@ class Headwall_GitHub_Plugin_Updater {
 	/**
 	 * Provide plugin information for the "View details" modal.
 	 *
-	 * @since 1.0.0
+	 * @since 2.4.0
 	 *
 	 * @param false|object|array $result The result object or array. Default false.
 	 * @param string             $action The API action being performed.
@@ -171,7 +129,10 @@ class Headwall_GitHub_Plugin_Updater {
 		$release = $this->get_latest_release();
 
 		if ( is_array( $release ) ) {
-			$plugin_data = get_plugin_data( $this->plugin_file, false, true );
+			if ( ! function_exists( 'get_plugin_data' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+			$plugin_data = get_plugin_data( VULNZ_AGENT_PLUGIN_FILE, false, false );
 
 			$result                = new \stdClass();
 			$result->name          = $plugin_data['Name'] ?? $this->plugin_slug;
@@ -199,18 +160,19 @@ class Headwall_GitHub_Plugin_Updater {
 	/**
 	 * Clear the cached release data after a plugin update completes.
 	 *
-	 * @since 1.0.0
+	 * @since 2.4.0
 	 *
 	 * @param \WP_Upgrader $upgrader The upgrader instance.
 	 * @param array        $options  Update details.
 	 */
 	public function clear_cache( $upgrader, $options ): void {
-		if ( 'update' === ( $options['action'] ?? '' )
-			&& 'plugin' === ( $options['type'] ?? '' )
-			&& ! empty( $options['plugins'] )
-			&& in_array( $this->plugin_basename, $options['plugins'], true )
+		if (
+			'update' === ( $options['action'] ?? '' ) &&
+			'plugin' === ( $options['type'] ?? '' ) &&
+			! empty( $options['plugins'] ) &&
+			in_array( $this->plugin_basename, $options['plugins'], true )
 		) {
-			delete_transient( $this->get_cache_key() );
+			delete_transient( UPDATER_CACHE_KEY );
 			delete_site_transient( 'update_plugins' );
 		}
 	}
@@ -218,37 +180,47 @@ class Headwall_GitHub_Plugin_Updater {
 	/**
 	 * Fetch the latest release from GitHub, with transient caching.
 	 *
-	 * @since 1.0.0
+	 * @since 2.4.0
 	 *
 	 * @return array|null Release data array, or null on failure.
 	 */
 	private function get_latest_release(): ?array {
 		$release = null;
 
-		$cache_key = $this->get_cache_key();
-		$cached    = get_transient( $cache_key );
+		$cached = get_transient( UPDATER_CACHE_KEY );
 
 		if ( is_array( $cached ) ) {
+			$this->log( 'get_latest_release: using cached release data.' );
 			$release = $cached;
 		} else {
-			$url      = sprintf( 'https://api.github.com/repos/%s/releases/latest', $this->github_repo );
+			$url      = sprintf( 'https://api.github.com/repos/%s/releases/latest', UPDATER_GITHUB_REPO );
 			$response = wp_remote_get(
 				$url,
 				array(
-					'timeout' => 10,
+					'timeout' => API_REQUEST_TIMEOUT,
 					'headers' => array(
 						'Accept' => 'application/vnd.github.v3+json',
 					),
 				)
 			);
 
-			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+			if ( is_wp_error( $response ) ) {
+				$this->log_error( 'get_latest_release: HTTP request to ' . $url . ' failed — ' . $response->get_error_message() );
+			} elseif ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+				$this->log_error( 'get_latest_release: GitHub returned HTTP ' . wp_remote_retrieve_response_code( $response ) . ' for ' . $url . '.' );
+			} else {
 				$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-				if ( is_array( $body ) && ! empty( $body['tag_name'] ) ) {
+				if ( ! is_array( $body ) || empty( $body['tag_name'] ) ) {
+					$this->log_error( 'get_latest_release: response JSON from ' . $url . ' missing tag_name.' );
+				} else {
 					$zip_url = $this->find_zip_asset( $body );
 
-					if ( ! empty( $zip_url ) ) {
+					if ( empty( $zip_url ) ) {
+						$this->log_error( 'get_latest_release: no matching .zip asset for tag ' . $body['tag_name'] . '.' );
+					} else {
+						$this->log( 'get_latest_release: found release ' . $body['tag_name'] . '.' );
+
 						$release = array(
 							'version'      => ltrim( $body['tag_name'], 'v' ),
 							'zip_url'      => $zip_url,
@@ -257,7 +229,7 @@ class Headwall_GitHub_Plugin_Updater {
 							'published_at' => $body['published_at'] ?? '',
 						);
 
-						set_transient( $cache_key, $release, $this->cache_ttl );
+						set_transient( UPDATER_CACHE_KEY, $release, UPDATER_CACHE_TTL );
 					}
 				}
 			}
@@ -270,10 +242,10 @@ class Headwall_GitHub_Plugin_Updater {
 	 * Find the plugin ZIP asset from a GitHub release.
 	 *
 	 * Looks for a .zip asset whose name matches the plugin slug
-	 * (e.g. "vulnz-agent.zip" or "vulnz-agent-2.2.1.zip").
+	 * (e.g. "vulnz-agent.zip" or "vulnz-agent-2.4.0.zip").
 	 * Prefers the stable "{slug}.zip" over a versioned match.
 	 *
-	 * @since 1.0.0
+	 * @since 2.4.0
 	 *
 	 * @param array $release_data Decoded GitHub release API response.
 	 * @return string Download URL, or empty string if no suitable asset found.
@@ -303,13 +275,33 @@ class Headwall_GitHub_Plugin_Updater {
 	}
 
 	/**
-	 * Get the transient cache key for this plugin's release data.
+	 * Log a debug message to the PHP error log when WP_DEBUG is on.
 	 *
-	 * @since 1.0.0
+	 * For routine flow tracing — cache hits, version comparisons, "up to date"
+	 * results. Use log_error() for actual failures that warrant investigation.
 	 *
-	 * @return string
+	 * @since 2.4.0
+	 *
+	 * @param string $message The message to log.
 	 */
-	private function get_cache_key(): string {
-		return 'headwall_ghu_' . md5( $this->github_repo );
+	private function log( string $message ): void {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			error_log( 'Vulnz_Agent Github_Updater: ' . $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug logging.
+		}
+	}
+
+	/**
+	 * Log an error message to the PHP error log unconditionally.
+	 *
+	 * Used for genuine failure conditions (HTTP errors, malformed responses,
+	 * missing release assets) that should always be visible to a sysadmin
+	 * diagnosing why updates aren't flowing — without requiring WP_DEBUG.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param string $message The message to log.
+	 */
+	private function log_error( string $message ): void {
+		error_log( 'Vulnz_Agent Github_Updater [error]: ' . $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional error logging for updater failures.
 	}
 }

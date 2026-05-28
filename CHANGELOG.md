@@ -5,6 +5,24 @@ All notable changes to Vulnz Agent will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-05-28
+
+### Changed
+
+- **Project-specific updater:** Replaced the portable `Headwall_GitHub_Plugin_Updater` with `Vulnz_Agent\Github_Updater`, a class in the plugin's own namespace. Behaviour is unchanged — it still checks GitHub Releases and integrates with the WordPress update system — but it is no longer a shared, droppable class.
+- **Filter renamed:** The auto-update disable filter is now `vulnz_agent_updater_enabled` (was `headwall_github_updater_enabled`) and takes a single `$enabled` argument.
+- **Configuration via constants:** Updater settings now live in `constants.php` as `UPDATER_GITHUB_REPO`, `UPDATER_CACHE_KEY`, and `UPDATER_CACHE_TTL`, rather than being passed to a constructor.
+- Tested up to WordPress 7.0.
+
+### Fixed
+
+- `uninstall.php` now deletes the updater's `vulnz_agent_updater_release` transient, plus any legacy `headwall_ghu_*` transients left by pre-2.4.0 installs.
+- `get_installed_plugins()` no longer emits an undefined-key warning on PHP 8+ for a plugin with no `Version` header.
+
+### Removed
+
+- `includes/class-headwall-github-plugin-updater.php` and the `HW_GITHUB_UPDATER_VERSION` global guard.
+
 ## [2.3.0] - 2026-03-28
 
 ### Added
@@ -248,6 +266,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[2.4.0]: https://github.com/headwalluk/vulnz-agent/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/headwalluk/vulnz-agent/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/headwalluk/vulnz-agent/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/headwalluk/vulnz-agent/compare/v2.1.2...v2.2.0

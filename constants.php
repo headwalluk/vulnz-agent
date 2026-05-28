@@ -29,6 +29,11 @@ const WEBSITE_DATA_CACHE_TTL = \MINUTE_IN_SECONDS;
 
 const API_REQUEST_TIMEOUT = 10;
 
+// GitHub auto-updater configuration.
+const UPDATER_GITHUB_REPO = 'headwalluk/vulnz-agent';
+const UPDATER_CACHE_KEY   = 'vulnz_agent_updater_release';
+const UPDATER_CACHE_TTL   = 12 * \HOUR_IN_SECONDS;
+
 // Default API endpoint URL (base URL without /api path).
 const DEFAULT_VULNZ_API_URL = 'https://api.vulnz.net';
 

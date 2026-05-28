@@ -2,9 +2,9 @@
 Contributors: headwalluk
 Tags: security, vulnerabilities, api, monitoring, vulnz
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 2.3.0
+Stable tag: 2.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,6 +100,15 @@ Yes. Each site needs the plugin installed and configured with its own settings. 
 2. Settings page for API configuration
 
 == Changelog ==
+
+= 2.4.0 (2026-05-28) =
+* Changed: Replaced the portable `Headwall_GitHub_Plugin_Updater` with a project-specific `Vulnz_Agent\Github_Updater` class in the plugin namespace
+* Changed: Auto-update disable filter renamed `headwall_github_updater_enabled` → `vulnz_agent_updater_enabled`
+* Changed: Updater configuration moved to `UPDATER_GITHUB_REPO`, `UPDATER_CACHE_KEY`, and `UPDATER_CACHE_TTL` constants
+* Changed: Tested up to WordPress 7.0
+* Fixed: Uninstall now removes the updater's cached release transient (and legacy headwall_ghu_* transients)
+* Fixed: No undefined-key warning on PHP 8+ when a plugin has no Version header
+* Docs: Updated GitHub auto-update documentation for the new updater
 
 = 2.3.0 (2026-03-28) =
 * Added: GitHub auto-updater with 12-hour transient caching
